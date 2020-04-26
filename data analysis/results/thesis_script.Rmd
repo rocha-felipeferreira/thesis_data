@@ -1,0 +1,785 @@
+---
+title: "Thesis' Script"
+author: "Felipe Ferreira de Oliveira Rocha"
+output:
+  html_document: default
+  pdf_document: default
+editor_options:
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = TRUE,
+	message = FALSE,
+	warning = FALSE
+)
+```
+
+## 1 About, Packages, and Options
+
+This is to assure proper levels of replication regarding the thesis of Felipe Ferreira de Oliveira Rocha. For more details and information, please, contact: rocha.felipeferreira@gmail.com. 
+ 
+For starters, I used the following packages (for which I am really grateful): 
+
+```{r packages}
+
+library(quanteda)
+library(readtext)
+library(tidyverse)
+library(lubridate)
+library(patchwork)
+library(tidytext)
+library(gwordtree)
+
+```
+
+Also, I defined a specific aesthetic function: 
+
+```{r aesthetic_function}
+
+thesis_theme <- function(){
+  theme(axis.title = element_text(size = rel(1.2), colour = "black", face = "bold.italic"), axis.text = element_text(size = rel(1.2), colour = "black"), axis.ticks = element_blank(), legend.text = element_text(size = rel(1.2)), legend.title = element_blank())
+}
+
+```
+
+
+## 2 Data source and Variables
+
+Data source 
+
+```{r data_source}
+
+corpus_data_source <- readtext(file = "./corpus/resenha de PEB/corpus_1995_2019/*.txt", docvarsfrom = "filenames", docvarnames = c("position", "speaker", "date", "language", "city", "country", "continent", "type")) 
+
+```
+
+Adding and Fixing Variables
+
+```{r adding_fixing_variables}
+
+corpus_data_source$position <- as_factor(corpus_data_source$position)
+
+corpus_data_source$realm <- ifelse(corpus_data_source$country != "brasil", 1, 0) %>% 
+  factor(., levels = c(0, 1), labels = c("domestic", "international"))
+
+corpus_data_source$speaker <- factor(corpus_data_source$speaker, levels = c("FHC", "L.F.Lampreia", "C.Lafer", "LULA", "C.Amorim", "DILMA", "A.Patriota", "L.A.Figueredo", "M.Vieira", "J.Serra", "A.Nunes", "E.Araujo"), labels = c("FHC", "Lampreia", "Lafer", "Lula", "Amorim", "Dilma", "Patriota", "Figueiredo", "Vieira", "Serra", "Nunes", "Araújo"))
+
+corpus_data_source$language <- as_factor(corpus_data_source$language)
+
+corpus_data_source$city <- as_factor(corpus_data_source$city)
+
+corpus_data_source$country <- as_factor(corpus_data_source$country)
+
+corpus_data_source$continent <- as_factor(corpus_data_source$continent)
+
+corpus_data_source$date <- dmy(corpus_data_source$date)
+
+corpus_data_source$year <- year(corpus_data_source$date)
+
+corpus_data_source$type <- str_remove_all(corpus_data_source$type, "\\*")
+
+corpus_data_source$type <- as_factor(corpus_data_source$type)
+
+corpus_data_source$dyads <- ifelse(corpus_data_source$date < "2001-01-28", "FHC and Lampreia", ifelse(corpus_data_source$date >= "2001-01-29" & corpus_data_source$date < "2003-01-01", "FHC and Lafer", ifelse(corpus_data_source$date >= "2003-01-01" & corpus_data_source$date <= "2010-12-31", "Lula and Amorim", ifelse(corpus_data_source$date >= "2011-01-01" & corpus_data_source$date < "2013-08-26", "Dilma and Patriota", ifelse(corpus_data_source$date >="2013-08-28" & corpus_data_source$date < "2015-01-01", "Dilma and Figueiredo", ifelse(corpus_data_source$date >= "2015-01-02" & corpus_data_source$date < "2016-05-13", "Dilma and Vieira", ifelse(corpus_data_source$date >= "2016-05-13" & corpus_data_source$date <= "2017-02-22", "Temer and Serra", ifelse(corpus_data_source$date > "2017-02-22" & corpus_data_source$date < "2019-01-02", "Temer and Nunes", "Bolsonaro and Araújo"))))))))
+
+# Fixing mistakes:
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_C.Lafer_26.01.2001_pt_sao.paulo_brasil_america_entrevista.txt"] <- "FHC and Lafer"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_C.Amorim_02.01.2011_pt_brasilia_brasil_america_discurso.txt"] <- "Lula and Amorim"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_A.Patriota_28.08.2013_pt_brasilia_brasil_america_discurso.txt"] <- "Dilma and Patriota"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_A.Patriota_28.08.2013_pt_brasilia_brasil_america_discurso*.txt"] <- "Dilma and Patriota"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_A.Patriota_29.08.2013_pt_brasilia_brasil_america_discurso.txt"] <- "Dilma and Patriota"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_A.Patriota_29.08.2013_pt_brasilia_brasil_america_discurso*.txt"] <- "Dilma and Patriota"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_M.Vieira_18.05.2016_pt_brasilia_brasil_america_discurso.txt"] <- "Dilma and Vieira"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_M.Vieira_26.06.2016_esp_varios_varios_america_artigo.txt"] <- "Dilma and Vieira"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_J.Serra_07.03.2017_pt_brasilia_brasil_america_discurso.txt"] <- "Temer and Serra"
+
+corpus_data_source$dyads[corpus_data_source$doc_id == "MRE_A.Nunes_02.01.2019_pt_brasilia_brasil_america_discurso.txt"] <- "Temer and Nunes"
+
+corpus_data_source$dyads <- as_factor(corpus_data_source$dyads)
+
+# Done fixing the mistakes!
+
+corpus_data_source$term_office_presid <- ifelse(corpus_data_source$date < "1999-01-01", "FHC1", ifelse(corpus_data_source$date >= "1999-01-01" & corpus_data_source$date < "2003-01-01", "FHC2", ifelse(corpus_data_source$date >= "2003-01-01" & corpus_data_source$date < "2007-01-01", "Lula1", ifelse(corpus_data_source$date >= "2007-01-01" & corpus_data_source$date < "2011-01-01", "Lula2", ifelse(corpus_data_source$date >= "2011-01-01" & corpus_data_source$date < "2015-01-01", "Dilma1", ifelse(corpus_data_source$date >= "2015-01-02" & corpus_data_source$date <= "2016-05-02", "Dilma2", ifelse(corpus_data_source$date > "2016-05-02" & corpus_data_source$date < "2019-01-02", "Temer", "Bolsonaro")))))))
+
+# Fixing mistakes: 
+
+corpus_data_source$term_office_presid[corpus_data_source$doc_id == "MRE_A.Nunes_02.01.2019_pt_brasilia_brasil_america_discurso.txt"] <- "Temer"
+
+corpus_data_source$term_office_presid[corpus_data_source$doc_id == "MRE_C.Amorim_02.01.2011_pt_brasilia_brasil_america_discurso.txt"] <- "Lula2"
+
+corpus_data_source$term_office_presid[corpus_data_source$doc_id == "MRE_M.Vieira_26.06.2016_esp_varios_varios_america_artigo.txt"] <- "Dilma2"
+
+# Done fixing the mistakes!
+
+corpus_data_source$term_office_presid <- as_factor(corpus_data_source$term_office_presid)
+
+corpus_data_source$diplomacy_as_profession <- ifelse(corpus_data_source$speaker == "Lampreia" | corpus_data_source$speaker == "Amorim" | corpus_data_source$speaker == "Patriota" | corpus_data_source$speaker == "Figueiredo" | corpus_data_source$speaker == "Vieira" | corpus_data_source$speaker == "Araújo", "Yes", ifelse(corpus_data_source$speaker == "Lafer" | corpus_data_source$speaker == "Serra" | corpus_data_source$speaker == "Nunes", "No", "Not the case")) %>% as_factor()
+
+corpus_data_source$president_party <- ifelse(corpus_data_source$term_office_presid == "FHC1" | corpus_data_source$term_office_presid  == "FHC2", "PSDB", ifelse(corpus_data_source$term_office_presid  == "Lula1" | corpus_data_source$term_office_presid == "Lula2" | corpus_data_source$term_office_presid  == "Dilma1" | corpus_data_source$term_office_presid  == "Dilma2", "PT", ifelse(corpus_data_source$term_office_presid  == "Temer", "PMDB", "PSL*"))) %>% as_factor()
+
+corpus_data_source$level_presid_diplomacy <- ifelse(corpus_data_source$term_office_presid == "FHC1" | corpus_data_source$term_office_presid == "FHC2", "Medium", ifelse(corpus_data_source$term_office_presid == "Lula1" | corpus_data_source$term_office_presid == "Lula2", "High", ifelse(corpus_data_source$term_office_presid == "Dilma1" |corpus_data_source$term_office_presid == "Dilma2" | corpus_data_source$term_office_presid == "Temer", "Low", "Not enough data"))) %>% as_factor()
+
+corpus_data_source$speaker_reshaped <- corpus_data_source$speaker %>% as.character()
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "FHC" & corpus_data_source$date < "1999-01-01"] <- "FHC I"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "FHC" & corpus_data_source$date >= "1999-01-01" & corpus_data_source$date < "2003-01-01"] <- "FHC II"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "Lula" & corpus_data_source$date >= "2003-01-01" & corpus_data_source$date < "2007-01-01"] <- "Lula I"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "Lula" & corpus_data_source$date >= "2007-01-01" & corpus_data_source$date < "2011-01-01"] <- "Lula II"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "Amorim" & corpus_data_source$date >= "2003-01-01" & corpus_data_source$date < "2007-01-01"] <- "Amorim I"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$speaker == "Amorim" & corpus_data_source$date >= "2007-01-01" & corpus_data_source$date < "2011-01-01"] <- "Amorim II"
+
+corpus_data_source$speaker_reshaped[corpus_data_source$doc_id == "MRE_C.Amorim_02.01.2011_pt_brasilia_brasil_america_discurso.txt"] <- "Amorim II"
+
+```
+
+## 3 Stopwords
+
+```{r stopwords}
+
+custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n")
+
+```
+
+## 4 Corpus and Tokenizing 
+
+Corpus: 
+
+```{r corpus}
+
+main_corpus <- corpus_data_source %>% drop_na() %>% corpus()
+
+```
+
+Tokens:
+
+```{r tokens}
+
+main_tokens <- tokens(main_corpus)
+
+main_tokens <- tokens_replace(x = main_tokens, pattern = "companheir*", replacement = "companheir@", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "europ*ia", replacement = "europeia", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "assembl*ia", replacement = "assembleia", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("instituto rio branco"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "japones*", replacement = "japones*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "chines*", replacement = "chines*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("hugo chávez"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("evo morales"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("folha de são paulo"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("reino unido"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("lyse doucet"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("san tiago dantas"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("lu** fara* monteiro"), valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "luís_fara_monteiro", replacement = "luiz_fara_monteiro", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("samuel pinheiro guimarães"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("b*ris casoy"), valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("colin powell"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("bom dia"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("quer dizer"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(x = main_tokens, pattern = "menin*", replacement = "menin@", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(x = main_tokens, pattern = "acredita*", replacement = "acreditar*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(x = main_tokens, pattern = "poluent*", replacement = "poluente*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "senhor*", replacement = "senhor*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "ministr*", replacement = "ministr*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("relações internacionais"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("relações exteriores"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "empres*ri*", replacement = "empresári*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "plant*", replacement = "plant*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "país*", replacement = "país*", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("condoleezza rice"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("honoris causa"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("bertha lutz"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("cristovam buarque"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("ricardo ferraço"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("mylton severiano"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("alan garcía"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("osmar chohf"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("carlos setti"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("nações unidas"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("união europeia"), case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "conflit*", replacement = "conflit@", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "amig*", replacement = "amig@", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("lehman brothers"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("gazeta mercantil"), valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("correio braziliense"), valuetype = "fixed", case_insensitive = TRUE)
+
+```
+
+## 5 Executive: The 1st Dimension
+
+### 5. 1 Proper Nouns
+
+```{r proper_nouns}
+
+proper_nouns <- main_tokens %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE)
+
+proper_nouns <- tokens_select(proper_nouns,
+                              pattern =  '^[A-Z]',
+                              valuetype = 'regex',
+                              case_insensitive = FALSE, 
+                              padding = TRUE)
+
+proper_nouns_bigram <- textstat_collocations(proper_nouns, min_count = 10, tolower = FALSE, size = 2) %>% as_tibble() %>% select(collocation, count) 
+proper_nouns_bigram$collocation <- str_to_title(proper_nouns_bigram$collocation)
+proper_nouns_bigram <- proper_nouns_bigram %>% group_by(collocation) %>% 
+  summarise(count = sum(count))
+
+proper_nouns_plot <- proper_nouns_bigram %>% top_n(50) %>% 
+  ggplot(aes(x = collocation, y = count)) + 
+  geom_segment(aes(x = reorder(collocation, count), y = count, xend = collocation, yend = 0)) + geom_point(size = 2.3) +
+  thesis_theme() +
+  theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(), panel.grid.major.x = element_blank()) + coord_flip() + scale_y_continuous(expand = c(0,0), limits = c(0, 1600), breaks = c(0, 500, 1000, 1500)) +
+  ylab("Frequência") + xlab("Collocation\n(Bigramas)")
+
+# ggsave("collocation_exec_bigrama.png", proper_nouns_plot, height = 10, width = 7, dpi = 600)
+
+```
+
+
+### 5.2 Keyness for Realm (Bigrams)
+
+
+```{r keyness_realm}
+
+realm_keyness <- main_tokens %>%
+  tokens_tolower() %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_ngrams(n = 2, concatenator = " ")  
+
+realm_keyness <- dfm(realm_keyness)
+
+realm_keyness <- dfm_group(realm_keyness, groups = "realm")
+
+realm_keyness <- textstat_keyness(realm_keyness, target = "international") 
+
+realm_keyness_exec <- textplot_keyness(realm_keyness, 25)
+
+realm_keyness_exec_plot <- realm_keyness_exec + thesis_theme() + 
+  scale_x_continuous(expand = c(0,0), limits = c(-200, 250)) +
+  scale_color_manual(labels = c("Internacional", "Doméstico"), values = c("darkblue", "gray"))
+
+# ggsave("real_exec_keyness.png", realm_keyness_exec_plot, height = 6.2, width = 9, dpi = 600)
+
+```
+
+
+### 5.3 TFIDF for each Continent: 
+
+
+```{r tfidf_continent}
+
+feat_continent <- dfm(main_tokens, tolower = TRUE, 
+                      remove_numbers = TRUE, remove_punct = TRUE, 
+                      remove = c(stopwords(language = "portuguese"),
+                                 stopwords(language = "english"), 
+                                 stopwords(language = "french"),
+                                 stopwords(language = "spanish"), 
+                                 stopwords(language = "italian"), 
+                                 custom_stopwords))
+
+feat_continent <- dfm_group(feat_continent, groups = "continent") %>% 
+  dfm_tfidf()
+
+feat_continent <- tidy(feat_continent)
+feat_continent$document <- str_to_upper(feat_continent$document)
+feat_continent$document <- str_replace_all(feat_continent$document, pattern = "AFRICA", replacement = "ÁFRICA")
+feat_continent$document <- str_replace_all(feat_continent$document, pattern = "ASIA", replacement = "ÁSIA")
+feat_continent$document <- str_replace_all(feat_continent$document, pattern = "AMERICA", replacement = "AMÉRICA")
+
+
+exec_tfidf_continent_plot <- feat_continent %>% group_by(document) %>% top_n(20) %>% ungroup() %>% 
+  ggplot(aes(x = reorder_within(term, count, document), y = count, fill = document)) + geom_col(show.legend = FALSE, colour = "black") +
+  facet_wrap(~document, scales = "free", strip.position = "right") + coord_flip() +
+  scale_x_reordered() +
+  ylab("Frequência") + xlab("Termos") +
+  thesis_theme() + 
+  theme(strip.text = element_text(size = rel(1.2), face = "bold"))
+
+# ggsave("exec_tfidf_continent_plot.png", exec_tfidf_continent_plot, height = 7.2, width = 9.2, dpi = 600)
+
+```
+
+
+### 5.4 Main Features and Correlation
+
+```{r main_feat_cor}
+
+main_feat_cor <- dfm(main_tokens, tolower = TRUE, remove_punct = TRUE,
+                         remove_numbers = TRUE, remove_symbols = TRUE, 
+                         remove = c(stopwords(language = "portuguese"),
+                                    stopwords(language = "english"),
+                                    stopwords(language = "french"),
+                                    stopwords(language = "italian"),
+                                    stopwords(language = "spanish"),
+                                    custom_stopwords))
+
+main_feat_cor <- dfm_trim(main_feat_cor, min_termfreq = 100) 
+main_feat_cor <- fcm(main_feat_cor)
+feat_cor <- names(topfeatures(main_feat_cor, 100))
+main_feat_cor <- fcm_select(main_feat_cor, pattern = feat_cor, case_insensitive = TRUE)
+
+textplot_network(main_feat_cor, omit_isolated = FALSE, edge_alpha = .3, edge_color = "lightblue", vertex_labelsize = 5.6)
+
+```
+
+
+## 6 Position: The 2nd Dimension
+
+### 6.1 TFIDF position
+
+```{r tfidf_position}
+
+feat_position <- tokens_subset(main_tokens, language == "pt")
+feat_position <- dfm(feat_position, tolower = TRUE, 
+                      remove_numbers = TRUE, remove_punct = TRUE, 
+                      remove = c(stopwords(language = "portuguese"),
+                                 stopwords(language = "english"), 
+                                 stopwords(language = "french"),
+                                 stopwords(language = "spanish"), 
+                                 stopwords(language = "italian"), 
+                                 custom_stopwords))
+
+feat_position <- dfm_group(feat_position, groups = "position") %>% 
+  dfm_tfidf()
+
+feat_position <- tidy(feat_position)
+feat_position$term <- ifelse(str_length(feat_position$term) <= 4, str_to_upper(feat_position$term), str_to_title(feat_position$term))
+  
+feat_position$term <- str_replace_all(feat_position$term, "NOW", "Now")
+feat_position$term <- str_replace_all(feat_position$term, "PAYS", "Pays")
+
+cargo_tfidf_plot <- feat_position %>% group_by(document) %>% top_n(45) %>% ungroup() %>%   ggplot(aes(x = reorder_within(term, count, document), y = count, fill = document)) + geom_point(size = 3, show.legend = FALSE, colour = "black", alpha = .8) +
+  facet_wrap(~document, scales = "free", strip.position = "right") + coord_flip() +
+  scale_x_reordered() +
+  xlab("Termos") + ylab("Frequência") + 
+  thesis_theme() +
+  theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.minor = element_blank(), panel.grid.major.y = element_line(colour = "gray75", linetype = "longdash"), panel.grid.major.x = element_blank(), strip.text = element_text(size = rel(1.4), face = "bold"), strip.background = element_rect(colour = "black", fill = "white"))
+
+# ggsave("cargo_tfidf_plot.png", cargo_tfidf_plot, height = 9.2, width = 9.2, dpi = 600)
+
+```
+
+### 6.2 Keyness for Position (Bigram)
+
+```{r keyness_position}
+
+position_keyness <- main_tokens %>%
+  tokens_tolower() %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_ngrams(n = 2, concatenator = " ")  
+
+position_keyness <- dfm(position_keyness)
+
+position_keyness <- dfm_group(position_keyness, groups = "position")
+
+position_keyness <- textstat_keyness(position_keyness, target = "PRES") 
+
+speakers_keyness_plot <- textplot_keyness(position_keyness, 30) 
+
+speakers_keyness_plot <- speakers_keyness_plot + thesis_theme() + 
+  scale_x_continuous(expand = c(0,0), limits = c(-200, 250)) +
+  scale_color_manual(labels = c("PRES", "MRE"), values = c("darkblue", "gray"))
+
+# ggsave("cargo_keyness_plot.png", speakers_keyness_plot, height = 6, width = 9.7, dpi = 600)
+
+```
+
+### 6.3 Proper nouns for Position
+
+```{r proper_nouns_position}
+
+#Presidents
+
+proper_nouns_presid <- tokens_subset(main_tokens, position == "PRES")
+
+ndoc(proper_nouns_presid)
+
+proper_nouns_presid <- proper_nouns_presid %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE)
+
+proper_nouns_presid <- tokens_select(proper_nouns_presid,
+                              pattern =  '^[A-Z]',
+                              valuetype = 'regex',
+                              case_insensitive = FALSE, 
+                              padding = TRUE)
+
+proper_nouns_presid_trigram <- textstat_collocations(proper_nouns_presid, min_count = 5, tolower = FALSE, size = 3) %>% as_tibble() %>% select(collocation, count) 
+
+proper_nouns_presid_trigram$collocation <- str_to_title(proper_nouns_presid_trigram$collocation)
+
+proper_nouns_presid_trigram <- proper_nouns_presid_trigram %>% group_by(collocation) %>% summarise(count = sum(count))
+
+proper_nouns_presid_trigram$speaker <- "PRES" %>% as_factor()
+
+#Chancellors
+
+proper_nouns_mre <- tokens_subset(main_tokens, position == "MRE")
+ndoc(proper_nouns_mre)
+
+proper_nouns_mre <- proper_nouns_mre %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE)
+
+proper_nouns_mre <- tokens_select(proper_nouns_mre,
+                                     pattern =  '^[A-Z]',
+                                     valuetype = 'regex',
+                                     case_insensitive = FALSE, 
+                                     padding = TRUE)
+
+proper_nouns_mre_trigram <- textstat_collocations(proper_nouns_mre, min_count = 5, tolower = FALSE, size = 3) %>% as_tibble() %>% select(collocation, count) 
+
+proper_nouns_mre_trigram$collocation <- str_to_title(proper_nouns_mre_trigram$collocation)
+
+proper_nouns_mre_trigram <- proper_nouns_mre_trigram %>% group_by(collocation) %>% 
+  summarise(count = sum(count))
+
+proper_nouns_mre_trigram$speaker <- "MRE" %>% as_factor()
+
+# Comparing values
+
+proper_nouns_tri_mre_pres_joint <- rbind(proper_nouns_mre_trigram, proper_nouns_presid_trigram)
+
+proper_nouns_tri_mre_pres_joint <- proper_nouns_tri_mre_pres_joint %>% 
+  filter(count > 5)
+
+proper_nouns_cargo_plot <- ggplot(proper_nouns_tri_mre_pres_joint, aes(x = reorder(collocation, count), y = count, fill = speaker)) + 
+  geom_line(aes(group = collocation), colour = "black") + 
+  geom_point(size = 3, shape = 21) + 
+  coord_flip() +
+  scale_fill_manual(values = c("MRE" = "white", "PRES" = "black")) +
+  theme(panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(colour = "gray50", linetype = "dotted"), 
+        panel.background = element_blank()) +
+  thesis_theme() + 
+  xlab("Expressões (Trigrama)") + ylab("Frequência")
+
+# ggsave("cargo_ProperNouns_plot.png", proper_nouns_cargo_plot, height = 10, width = 10, dpi = 600)
+
+```
+
+### 6.4 Main Features and Correlation
+
+Chancellors: 
+
+```{r main-feat-cor-mre}
+
+main_feat_mre_cor <- tokens_subset(main_tokens, position == "MRE")
+ndoc(main_feat_mre_cor)
+
+main_feat_mre_cor <- dfm(main_feat_mre_cor, tolower = TRUE, remove_punct = TRUE,
+                         remove_numbers = TRUE, remove_symbols = TRUE, 
+                         remove = c(stopwords(language = "portuguese"),
+                                    stopwords(language = "english"),
+                                    stopwords(language = "french"),
+                                    stopwords(language = "italian"),
+                                    stopwords(language = "spanish"),
+                                    custom_stopwords))
+
+main_feat_mre_cor <- dfm_trim(main_feat_mre_cor, min_termfreq = 100) 
+main_feat_mre_cor <- fcm(main_feat_mre_cor)
+feat_mre_cor <- names(topfeatures(main_feat_mre_cor, 100))
+main_feat_mre_cor <- fcm_select(main_feat_mre_cor, pattern = feat_mre_cor, case_insensitive = TRUE)
+
+mre_network <- textplot_network(main_feat_mre_cor, omit_isolated = FALSE, edge_alpha = .3, edge_color = "lightblue", vertex_labelsize = 5.6) + ggtitle("CHANCELERES") + 
+  theme(plot.title = element_text(face = "bold", colour = "red"))
+
+```
+
+Presidents: 
+
+```{r main-feat-cor-pres}
+
+main_feat_pres_cor <- tokens_subset(main_tokens, position == "PRES")
+ndoc(main_feat_pres_cor)
+
+main_feat_pres_cor <- dfm(main_feat_pres_cor, tolower = TRUE, remove_punct = TRUE,
+                         remove_numbers = TRUE, remove_symbols = TRUE, 
+                         remove = c(stopwords(language = "portuguese"),
+                                    stopwords(language = "english"),
+                                    stopwords(language = "french"),
+                                    stopwords(language = "italian"),
+                                    stopwords(language = "spanish"),
+                                    custom_stopwords))
+
+main_feat_pres_cor <- dfm_trim(main_feat_pres_cor, min_termfreq = 100) 
+main_feat_pres_cor <- fcm(main_feat_pres_cor)
+feat_pres_cor <- names(topfeatures(main_feat_pres_cor, 100))
+main_feat_pres_cor <- fcm_select(main_feat_pres_cor, pattern = feat_pres_cor, case_insensitive = TRUE)
+
+pres_network <- textplot_network(main_feat_pres_cor, omit_isolated = FALSE, edge_alpha = .3, edge_color = "lightpink", vertex_labelsize = 5.6) + ggtitle("PRESIDENTES") + 
+  theme(plot.title = element_text(face = "bold", colour = "red"))
+
+```
+
+Joining them.
+
+```{r joining_mre_chancelor}
+
+joined_network <- pres_network + mre_network + plot_layout(nrow = 2)
+joined_network
+
+# ggsave("cargo_network_plot.png", joined_network, height = 17, width = 11, dpi = 600)
+
+```
+
+
+### 6.4 Wordtrees 
+
+```{r brazil_defends}
+
+#Chanceleres
+brazil_defends_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
+
+brazil_defends_mre_kwic <- kwic(brazil_defends_mre, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_defends_mre_kwic$merged <- paste(brazil_defends_mre_kwic$pre, brazil_defends_mre_kwic$keyword, brazil_defends_mre_kwic$post)
+
+brazil_defends_mre_kwic$merged <- str_squish(brazil_defends_mre_kwic$merged)
+
+gwordtree(word = brazil_defends_mre_kwic$merged, firstword = "brasil", width = 1200)
+
+#Presidentes
+
+brazil_defends_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
+
+brazil_defends_pres_kwic <- kwic(brazil_defends_pres, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_defends_pres_kwic$merged <- paste(brazil_defends_pres_kwic$pre, brazil_defends_pres_kwic$keyword, brazil_defends_pres_kwic$post)
+
+brazil_defends_pres_kwic$merged <- str_squish(brazil_defends_pres_kwic$merged)
+
+gwordtree(word = brazil_defends_pres_kwic$merged, firstword = "brasil", width = 1200)
+
+```
+
+
+```{r brazil_must/should}
+
+#Chanceleres
+brazil_mustshould_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
+
+brazil_mustshould_mre_kwic <- kwic(brazil_mustshould_mre, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_mustshould_mre_kwic$merged <- paste(brazil_mustshould_mre_kwic$pre, brazil_mustshould_mre_kwic$keyword, brazil_mustshould_mre_kwic$post)
+
+brazil_mustshould_mre_kwic$merged <- str_squish(brazil_mustshould_mre_kwic$merged)
+
+gwordtree(word = brazil_mustshould_mre_kwic$merged, firstword = "brasil", width = 1000)
+
+
+#Presidentes
+
+
+brazil_mustshould_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
+
+brazil_mustshould_pres_kwic <- kwic(brazil_mustshould_pres, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_mustshould_pres_kwic$merged <- paste(brazil_mustshould_pres_kwic$pre, brazil_mustshould_pres_kwic$keyword, brazil_mustshould_pres_kwic$post)
+
+brazil_mustshould_pres_kwic$merged <- str_squish(brazil_mustshould_pres_kwic$merged)
+
+gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "brasil", width = 1000)
+
+```
+
+
+```{r brazil_can}
+
+#Chanceleres
+brazil_can_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
+
+brazil_can_mre_kwic <- kwic(brazil_can_mre, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_can_mre_kwic$merged <- paste(brazil_can_mre_kwic$pre, brazil_can_mre_kwic$keyword, brazil_can_mre_kwic$post)
+
+brazil_can_mre_kwic$merged <- str_squish(brazil_can_mre_kwic$merged)
+
+gwordtree(word = brazil_can_mre_kwic$merged, firstword = "brasil", width = 1000)
+
+#Presidentes
+brazil_can_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
+
+brazil_can_pres_kwic <- kwic(brazil_can_pres, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_can_pres_kwic$merged <- paste(brazil_can_pres_kwic$pre, brazil_can_pres_kwic$keyword, brazil_can_pres_kwic$post)
+
+brazil_can_pres_kwic$merged <- str_squish(brazil_can_pres_kwic$merged)
+
+gwordtree(word = brazil_can_pres_kwic$merged, firstword = "brasil", width = 1000)
+
+```
+
+```{r brazil_needs}
+
+#Chanceleres
+brazil_needs_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
+
+brazil_needs_mre_kwic <- kwic(brazil_needs_mre, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_needs_mre_kwic$merged <- paste(brazil_needs_mre_kwic$pre, brazil_needs_mre_kwic$keyword, brazil_needs_mre_kwic$post)
+
+brazil_needs_mre_kwic$merged <- str_squish(brazil_needs_mre_kwic$merged)
+
+gwordtree(word = brazil_needs_mre_kwic$merged, firstword = "brasil", width = 1000)
+
+#Presidentes
+
+brazil_needs_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
+
+brazil_needs_pres_kwic <- kwic(brazil_needs_pres, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_needs_pres_kwic$merged <- paste(brazil_needs_pres_kwic$pre, brazil_needs_pres_kwic$keyword, brazil_needs_pres_kwic$post)
+
+brazil_needs_pres_kwic$merged <- str_squish(brazil_needs_pres_kwic$merged)
+
+gwordtree(word = brazil_needs_pres_kwic$merged, firstword = "brasil", width = 1000)
+
+```
+
+## 7 Agents: The 3rd Dimension
+
+### 7.1 TFIDF of agents
+
+```{r tfidf_agents}
+
+dfm_specific_terms <- tokens_subset(main_tokens, language == "pt")
+
+dfm_specific_terms <- dfm(dfm_specific_terms, tolower = TRUE, 
+                          remove_punct = TRUE, remove_numbers = TRUE, 
+                          remove_symbols = TRUE, remove_separators = TRUE,
+                          remove = c(stopwords(language = "portuguese"), 
+                                     custom_stopwords, 
+                                     stopwords(language = "english"), 
+                                     stopwords(language = "spanish"),
+                                     stopwords(language = "french"),
+                                     stopwords(language = "italian")))
+
+dfm_specific_terms <- dfm_group(dfm_specific_terms, groups = "speaker_reshaped") %>% 
+  dfm_tfidf()
+
+specific_terms <- tidy(dfm_specific_terms)
+specific_terms$document <- str_to_upper(specific_terms$document)
+specific_terms$term <- str_to_upper(specific_terms$term)
+
+specific_terms <- specific_terms %>% group_by(document) %>% top_n(15) %>% ungroup() 
+ggplot(specific_terms, aes(x=reorder_within(term, count, document), y=count, fill = document)) + geom_col(show.legend = FALSE) + facet_wrap(~document, scales = "free", nrow = 3) + coord_flip() + scale_x_reordered()
+
+```
+
+### 7.2 Similarity of Agents
+
+```{r agent_similarity}
+
+agents_similarity <- dfm(main_tokens, tolower = TRUE, 
+                          remove_punct = TRUE, remove_numbers = TRUE, 
+                          remove_symbols = TRUE, remove_separators = TRUE,
+                          remove = c(stopwords(language = "portuguese"), 
+                                     custom_stopwords, 
+                                     stopwords(language = "english"), 
+                                     stopwords(language = "spanish"),
+                                     stopwords(language = "french"),
+                                     stopwords(language = "italian")))
+
+agents_similarity <- dfm_group(agents_similarity, groups = "speaker_reshaped") 
+
+agents_similarity <- textstat_simil(agents_similarity, margin = "documents", method = "correlation")
+
+agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust() 
+plot(agents_similarity_dend)
+
+agents_similarity_matrix <- as.matrix(agents_similarity)
+ 
+```
+
+

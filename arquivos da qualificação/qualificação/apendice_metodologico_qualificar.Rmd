@@ -1,0 +1,556 @@
+---
+title: "**APÊNDICE - Apêndice Metodológico**"
+author: "Felipe Rocha"
+output:
+  pdf_document:
+  html_document:
+    df_print: paged
+geometry: left = 3cm, top = 3cm, right = 2cm, bottom = 2cm
+
+---
+
+\pagenumbering{gobble}
+
+# 1. Sobre o Documento
+
+Conforme discutido no projeto, a pesquisa empírica dependerá da avaliação do dicionário-modelo criado por Vilela e Neiva (2011) e de sua adaptação para o Corpus da tese. O intuito é garantir que o esquema de codificação seja representativo da realidade textual analisada. Para tanto, uma série de medidas vêm sendo tomadas, as quais o presente documento informa. Desse modo, o objetivo desse apêndice é mostrar as conclusões já obtidas, discutir os possíveis efeitos que elas terão na montagem do dicionário final e assegurar níveis de replicação e de transparência em mínimos detalhes. 
+
+De acordo com o que foi previsto no cronograma da tese, a primeira fase da pesquisa empírica ainda não teve seu prazo encerrado e está em pleno desenvolvimento. Consequentemente, é válido registrar que esse documento não apresenta resultados conclusivos, apenas achados cuja natureza é exploratória e tentativa. *Insights* a serem partilhados com os examinadores da banca. 
+
+Com fins de facilitar a visualização do exato local onde atualmente estamos na pesquisa empírica, a figura 1 apresenta em cor verde as etapas já concluídas, em amarelo, as que estão sendo realizadas e, em vermelho, as que ainda serão iniciadas: 
+
+
+```{r fases-metodologicas, echo=FALSE, fig.align="center", fig.cap="Fases Metodológicas", out.height="40%", strip.white=TRUE, fig.pos= 'h'}
+
+knitr::include_graphics("fases_metodologicas.pdf") 
+
+```
+
+Através da figura é possível perceber a existência de etapas concluídas, em desenvolvimento e ainda não iniciadas. Por sua vez, esse documento apresenta a montagem do dicionário inicial, a construção da amostra aleatória, a aplicação do dicionário e alguns achados provenientes da exploração textual. Antes de discutir cada uma desses pontos, é necessário fazer duas ressalvas:  
+
+1. Evitamos inserir códigos computacionais em abundância, já que isso poderia servir de obstáculo para a compreensão das partes mais importantes do documento. Os códigos que, por ventura, aparecerão são essenciais e estarão acompanhados de comentários explicativos cuja finalidade é didática. Eles serão representados, no início da frase, pelo símbolo "#". Os interessados em uma versão completa dos códigos, favor, entrar em contato com: rocha.felipeferreira@gmail.com 
+
+2. Os achados incluídos possuem natureza exploratória. Por essa razão, não teceremos comentários específicos sobre o que cada gráfico e/ou tabela significa, já que isso pouco contribui com o objetivo primário do documento. Na última seção desse apêndice, entretanto, aqueles achados cujo impacto no esquema final de codificação da tese foi relevante serão discutidos de forma mais detalhada.  
+
+
+# 2. Pacotes Utilizados 
+
+Para realizar as análises foram necessários alguns pacotes adicionais aos já existentes no R e no ambiente do RStudio. Como essas são informações importantes para a replicação dos resultados, seguem, detalhadamente, os pacotes adicionais utilizados: 
+
+
+```{r pacotes, message=FALSE, warning=FALSE}
+
+# O comando "library" foi usado para carregar cada um dos pacotes. 
+
+library(quanteda)
+library(readtext)
+library(tidyverse)
+library(lubridate)
+library(ggthemes)
+library(topicmodels)
+
+```
+
+
+# 3. Corpus e suas Variáveis
+
+
+```{r corpus, echo=FALSE}
+
+tese_textos <- readtext("../corpus/*.txt", docvarsfrom = "filenames", docvarnames = c("cargo", "emissor", "data", "idioma", "cidade", "pais", "continente", "sobre"))
+
+tese_corpus <- corpus(tese_textos)
+
+data <- tese_corpus[["data"]]
+data$data <- dmy(data$data)
+tese_corpus[["data"]] <- data$data
+data$data <- year(data$data)
+tese_corpus[["ano"]] <- data$data
+
+cargo <- tese_corpus[["cargo"]]
+cargo$cargo <- factor(cargo$cargo)
+tese_corpus[["cargo"]] <- cargo$cargo
+
+lugar_discurso <- tese_corpus[["pais"]]
+lugar_discurso$lugar_disc <- ifelse(lugar_discurso$pais != "brasil", 1, 0) 
+lugar_discurso$lugar_disc <- factor(lugar_discurso$lugar_disc, levels = c(0, 1), labels = c("doméstico", "internacional"))
+tese_corpus[["lugar_disc"]] <- lugar_discurso$lugar_disc
+
+emissor <- tese_corpus[["emissor"]]
+emissor$emissor <-factor(emissor$emissor, levels = c("FHC", "L.F.Lampreia", "C.Lafer", "LULA", "C.Amorim", "DILMA", "A.Patriota", "L.A.Figueredo", "M.Vieira", "J.Serra"), labels = c("FHC", "Lampreia", "Lafer", "Lula", "Amorim", "Dilma", "Patriota", "Figueiredo","Vieira", "Serra"))
+tese_corpus[["emissor"]] <-emissor$emissor
+
+idioma <-tese_corpus[["idioma"]]
+idioma$idioma <- factor(idioma$idioma)
+tese_corpus[["idioma"]] <- idioma$idioma
+
+cidade <-tese_corpus[["cidade"]]
+cidade$cidade <- factor(cidade$cidade)
+tese_corpus[["cidade"]] <- cidade$cidade
+
+pais <-tese_corpus[["pais"]]
+pais$pais <- factor(pais$pais)
+tese_corpus[["pais"]] <- pais$pais
+
+continente <- tese_corpus[["continente"]]
+continente$continente <- factor(continente$continente)
+tese_corpus[["continente"]] <- continente$continente
+
+pares <- tese_corpus[["data"]]
+pares$pares <- ifelse(pares$data < "2001-01-28", "FHC e Lampreia", ifelse(pares$data >= "2001-01-29" & pares$data < "2003-01-01", "FHC e Lafer", ifelse(pares$data >= "2003-01-01" & pares$data <= "2010-12-31", "Lula e Amorim", ifelse(pares$data >= "2011-01-01" & pares$data < "2013-08-26", "Dilma e Patriota", ifelse(pares$data >="2013-08-28" & pares$data < "2015-01-01", "Dilma e Figueiredo", ifelse(pares$data > "2015-01-01" & pares$data < "2016-05-12", "Dilma e Vieira", ifelse(pares$data > "2016-05-12" & pares$data < "2017-02-22", "Temer e Serra", "outros")))))))
+pares$pares <- factor(pares$pares)
+tese_corpus[["pares"]] <- pares$pares
+
+mandato_presid <- tese_corpus[["data"]]
+mandato_presid$mandato_presid <- ifelse(mandato_presid$data < "1999-01-01", "FHC1", ifelse(mandato_presid$data >= "1999-01-01" & mandato_presid$data < "2003-01-01", "FHC2", ifelse(mandato_presid$data >= "2003-01-01" & mandato_presid$data < "2007-01-01", "Lula1", ifelse(mandato_presid$data >= "2007-01-01" & mandato_presid$data < "2011-01-01", "Lula2", ifelse(mandato_presid$data >= "2011-01-01" & mandato_presid$data < "2015-01-01", "Dilma1", ifelse(mandato_presid$data >= "2015-01-01" & mandato_presid$data <  "2016-08-31", "Dilma2", "Temer"))))))
+mandato_presid$mandato_presid <- factor(mandato_presid$mandato_presid)
+tese_corpus[["mandato_presid"]] <- mandato_presid$mandato_presid
+
+
+partido_pres <- tese_corpus[["emissor"]]
+partido_pres$partido_pres <- ifelse(partido_pres$emissor == "FHC", "PSDB", ifelse(partido_pres$emissor == "Lula" | partido_pres$emissor == "Dilma", "PT", "Não se aplica"))
+partido_pres$partido_pres <- factor(partido_pres$partido_pres)
+tese_corpus[["partido_pres"]] <- partido_pres$partido_pres
+
+
+diplo_carreira <- tese_corpus[["emissor"]]
+diplo_carreira$diplo_carreira <- ifelse(diplo_carreira$emissor == "Lampreia" | diplo_carreira$emissor == "Amorim" | diplo_carreira$emissor == "Patriota" | diplo_carreira$emissor == "Figueiredo" | diplo_carreira$emissor == "Vieira", 1, ifelse(diplo_carreira$emissor == "Lafer" | diplo_carreira$emissor == "Serra", 0, "Não se aplica"))
+diplo_carreira$diplo_carreira <- factor(diplo_carreira$diplo_carreira)
+tese_corpus[["diplo_carreira"]] <- diplo_carreira$diplo_carreira
+
+
+grau_diplo_pres <- tese_corpus[["emissor"]]
+grau_diplo_pres$grau_diplo_pres <- ifelse(grau_diplo_pres$emissor == "FHC", "Moderado", ifelse(grau_diplo_pres$emissor == "Lula", "Alto", ifelse(grau_diplo_pres$emissor == "Dilma", "Baixo", "Não se aplica")))
+grau_diplo_pres$grau_diplo_pres <- factor(grau_diplo_pres$grau_diplo_pres)
+tese_corpus[["grau_diplo_pres"]] <- grau_diplo_pres$grau_diplo_pres
+
+rm(idioma, lugar_discurso, grau_diplo_pres, pais, pares, partido_pres, mandato_presid, continente, cargo, cidade, data, emissor, diplo_carreira)
+
+tese_corpus_dfm <- summary(tese_corpus, n = 10000)
+  
+```
+
+
+Na parte metodológica do projeto de tese já foram apresentadas as principais informações descritivas do Corpus utilizado para a análise. Portanto, o que será feito agora é discutir melhor sobre cada uma das suas variáveis e níveis de mensuração.
+
+Conforme já mencionado, há um total de `r length(tese_corpus_dfm$Text)` discursos pronunciados pelos Presidentes e Chanceleres brasileiros entre `r min(tese_corpus_dfm$ano)` e `r max(tese_corpus_dfm$ano)`. O banco de dados é formado por um amplo conjunto de variáveis. Para facilitar a visualização das mesmas, as discussões serão feitas em blocos e com base em 10 linhas, selecionadas aleatoriamente: 
+
+```{r variáveis corpus primeiro bloco}
+# O comando abaixo foi utilizado para selecionar 10 linhas 
+# aleatórias do Corpus e, então, plotá-los em forma de tabela 
+
+set.seed(123)
+variaveis_corpus <-sample_n(tese_corpus_dfm, 10)
+knitr::kable(variaveis_corpus[, 1:3], row.names = FALSE, 
+             caption = "Primeiro bloco de variáveis do Corpus")
+
+```
+
+As primeiras três colunas apresentadas mostram as seguintes informações: 
+
+  * __Text:__ Trata-se do nome que descreve cada um dos textos em suas especificidades;
+  * __Types:__ É a quantidade de termos únicos dos discursos (não se contabiliza a repetição). Por exemplo, na frase: "Viu uma lua no céu e viu outra lua no mar", existem 8 types;
+  * __Tokens:__ Quantidade de termos nos discursos (contabiliza-se a repetição). Por exemplo, na frase: "Viu uma lua no céu e viu outra lua no mar", existem 11 tokens;
+  
+  
+```{r variáveis corpus segundo bloco}
+
+knitr::kable(variaveis_corpus[, 4:12], row.names = FALSE, 
+             caption = "Segundo bloco de variáveis do Corpus")
+
+```
+   
+  * __Sentences:__ Quantidade de frases/sentenças em cada discurso;
+  * __Cargo:__ Se Chanceler ou Presidente da República;
+  * __Emissor:__ Nome do emissor do discurso;
+  * __Data__: Data de pronunciamento do discurso (em formato ANO/MÊS/DIA);
+  * __Idioma:__ Idioma em que o pronunciamento está escrito; 
+  * __Cidade:__ Cidade de pronunciamento do discurso. Em casos omissos: NA;
+  * __País:__ País de pronunciamento do discurso;
+  * __Continente:__ Continente do pronunciamento;
+  * __Sobre:__ Informações para rápida identificação da natureza do discurso;
+  
+   
+   
+```{r variáveis corpus terceiro bloco}
+
+knitr::kable(variaveis_corpus[, 13:19], row.names = FALSE, 
+             caption = "Terceiro bloco de variáveis do Corpus")
+
+```
+   
+   
+  * __Ano:__ Ano de pronunciamento do discurso;
+  * **Lugar_disc:** Se o discurso foi enunciado em cenário internacional ou doméstico;
+  * **Pares:** Discursos pertencentes a respectivos pares de Presidente e Chanceler;
+  * **Mandato_presid:** Informa em qual mandato presidencial o discurso aconteceu;
+  * __Partido_pres__: Partido do Presidente;
+  * **Diplo_carreira:** Se o emissor do discurso é diplomata de carreira ou não (em casos de Presidentes, será marcado que não se aplica);
+  * **Grau_diplo_pres**: Informa o grau de diplomacia presidencial. Essa é uma medida qualitativa, baseada no que aponta a literatura. Não é, portanto, uma estimativa numérica precisa. Nos casos dos Chanceleres, será marcado que não se aplica. 
+
+
+Em suma, essas foram as principais informações a respeito do Corpus, de sua estrutura e variáveis. Agora, é possível montar o dicionário inicial, conforme pensado por Vilela e Neiva (2011)
+
+
+# 4. Montagem do Dicionário (VILELA e NEIVA (2011))
+
+
+Conforme prevista na parte metodológica do projeto da tese, a montagem e operacionalização das categorias de análise começaram através de um dicionário pré-existente, já que isso aumenta a validade e confiabilidade da alocação temática. Assim, a primeira fase tem início com a incorporação do seguinte dicionário: 
+
+
+```{r dicionario 1, echo=FALSE}
+
+dicionario_fase1 <- dictionary(list(instituições_internacionais = c("união europ*ia", "ue", "comunidade dos países de língua portuguesa", "cplp", "organização das nações unidas", "onu", "banco mundial", "organização dos estados americanos", "oea", "g7", "g8", "organização internacional do trabalho", "oit", "área de livre comércio das américas", "alca", "mercado comum do sul", "mercosul", "organização das nações unidas para a educação e cultura", "unesco", "fundo monetário internacional", "fmi", "fundo das nações unidas para a infância", "unicef", "organização mundial do comércio", "omc", "organização mundial da saúde", "oms", "instituições financeiras multilaterais", "comunidade ibero-americana", "governança global", "banco interamericano de desenvolvimento", "bid", "organização das nações unidas para agricultura e alimentação","fao", "programa das nações unidas para o desenvolvimento", "pnud", "associação latino-americana de integração", "aladi"), economia = c("economia", "inflação", "estabilidade financeira", "instabilidade financeira", "financeira", "comércio", "desenvolvimento econômico", "subsídio", "protecionismo", "barreira não tarifária", "tarifa", "investir", "indústria", "produto interno bruto", "pib", "agricultura","riqueza natural", "produção", "produtivo", "força de trabalho", "geração de renda","geração de emprego", "geração de postos de trabalho", "crise financeira", "crise econômica", "credor", "devedor", "privatizar", "empresa", "exploração econômica", "exploração capitalista", "monopólio", "barreira comercial", "banco", "super*vit",  "déficit", "orçamento", "exportação", "importação", "agroindústria", "agronegócio","agropecuária", "bndes", "mercado"), desigualdade_social = c("desigualdade", "igualdade", "combate à fome", "exclusão social", "inclusão social", "justiça social", "injustiça social", "pobre", "rico", "distribuição de renda", "proteção social", "indigência", "indigente", "miséria", "favela", "mst", "segregação", "programa social", "bolsa família", "bolsa escola", "bolsa renda", "bolsa alimentação", "vulneravel", "menos favorecidos", "universalização da educação", "universalização dos serviços públicos", "contra a fome"), meio_ambiente = c("proteção ambiental", "questão ambiental", "conservação ambiental", "ambiental", "aquecimento global", "desaquecimento do planeta", "quioto", "kyoto", "meio ambiente","emissão de gás", "efeito estufa", "combustível renovável", "biocombustível", "energia renovável", "energia limpa", "desmatar", "desmatamento",  "mudança de clima", "poluição", "carbono", "co2", "ecologia", "eco 92",  "eco92", "eco_92", "recurso hídrico", "agenda 21", "rio92", "rio 92", "ecossistema", "sustentável", "poluente", "amazônia", "floresta", "queimada"),  paz_seguranca_internacional = c("paz", "narcotráfico", "tráfico de drogas", "conflitos de fronteira", "conflitos fronteiriços", "fronteira", "terror militar", "guerra", "defesa internacional", "defesa do território", "conflito", "arma", "armas", "armada", "desarmar", "teste nuclear", "guerra nuclear", "bomba nuclear", "segurança nacional", "segurança internacional", "conselho de segurança"), direitos_humanos_democracia = c("direitos", "democracia", "xenofobia", "discriminação", "racismo", "justiça", "injustiças", "minoria étnica sexual", "minoria étnica racial", "emancipação do país", "emancipação política", "cidadania", "exploração sexual", "exploração do trabalho infantil"), cooperacao_internacional = c("cooperação", "parceria", "intercâmbio", "embrapa")))
+
+```
+
+```{r visualizar dic1}
+# Categoria: Instituições Internacionais
+dicionario_fase1$instituições_internacionais
+
+# Categoria: Economia
+dicionario_fase1$economia
+
+# Categoria: Desigualdade Social
+dicionario_fase1$desigualdade_social
+
+# Categoria: Meio Ambiente
+dicionario_fase1$meio_ambiente
+
+# Categoria: Paz e Segurança Internacionais
+dicionario_fase1$paz_seguranca_internacional
+
+# Categoria: Direitos Humanos e Democracia
+dicionario_fase1$direitos_humanos_democracia
+
+# Categoria: Cooperação Internacional
+dicionario_fase1$cooperacao_internacional
+
+```
+
+# 5. Amostra Aleatória
+
+Tendo estruturado todo o dicionário inicial, o próximo passo foi criar uma amostra aleatória dos `r length(tese_corpus_dfm$Text)` pronunciamentos. Nessa fase, como o dicionário de Vilela e Neiva está em português, serão selecionados apenas os discursos nesse idioma: 
+
+```{r primeira amostra aleatória}
+
+# Esse primeiro comando foi utilizado para selecionar apenas os discursos em português. 
+
+primeira_amostra_aleatoria <- corpus_subset(tese_corpus, idioma == "pt")
+
+# Agora, construímos uma amostra aleatória de 314 discursos. 
+
+set.seed(1234)
+primeira_amostra_aleatoria <- corpus_sample(primeira_amostra_aleatoria, 314)
+
+```
+
+```{r descritivos primeira amostra, echo=FALSE}
+
+descritivos_primeira_amostra <- summary(primeira_amostra_aleatoria, n = 314)
+
+```
+
+A seleção de uma amostra de `r length(descritivos_primeira_amostra$Text)` discursos possui razões estatísticas. Ao se adotar um *confidence level* de 95% e um *confidence interval* de 5 na população total de discursos, a calculadora online de [tamanho amostral](https://www.surveysystem.com/sscalc.htm) aponta tal número de pronunciamentos como ideal. 
+
+A partir da obtenção dessa amostra aleatória, é necessário saber as suas características descritivas. Para isso, em primeiro lugar, segue a quantidade de discursos (n) para os Presidentes (PRES) e os Ministros de Relações Exteriores (MRE). 
+   
+```{r proporção-cargo, echo=FALSE}
+
+prop_cargo <- descritivos_primeira_amostra %>% select(cargo) %>% count(cargo) 
+
+knitr::kable(prop_cargo)
+
+```
+
+Pelo que se percebe, a quantidade de discursos alocada para cada um dos cargos não supervaloriza e nem subvaloriza nenhum dos atores em análise. Como há mais pronunciamentos presidenciais, naturalmente, a amostra coletou uma maior quantidade dos mesmos. De qualquer modo, tudo aleatóriamente. Outra informação a se observar é a quantidade de discursos por emissor e por par Presidente-Chanceler. Para ambas as informações, segue o gráfico abaixo. 
+
+
+```{r proporcao-par, fig.align="center", echo=FALSE, out.height = "30%"}
+
+descritivos_primeira_amostra %>% select(pares, cargo) %>% count(pares, cargo) %>% ggplot(aes(x=reorder(pares, n), y=n, fill = cargo)) + geom_bar(stat = "identity") + theme(axis.title = element_blank(), axis.text = element_text(size = rel(1.3), colour = "black")) + coord_flip() + scale_fill_wsj()
+
+```
+
+Conforme esperado, a amostra aleatória representa bem a proporção original de discursos totais de cada um dos emissores. Assim, Lula e Celso Amorim são os que mais possuem dados coletados e Temer e Serra são os que menos possuem pronunciamentos na amostra aleatória. 
+
+Com isso, é possível seguir em frente e aplicar o dicionário. Para evitar vieses, os resultados de frequência serão apresentados em escala relativa. 
+
+
+# 6. Aplicação Quantitativa do Dicionário
+
+Até aqui, já passamos pela fase de construção do Dicionário inicial (Vilela e Neiva (2011)), já selecionamos a amostra aleatória a ser explorada e, agora, veremos como o dicionário se comporta ao ser aplicado. Essa, por sua vez, é a última fase já concluída da pesquisa. O que será visto é uma simulação em menor escala do que será realizado na tese, tão logo o dicionário final tenha sido fixado e aplicado. Portanto, os achados são temporários e apenas exploratórios. 
+
+Em primeiro lugar, importa saber quais foram os temas mais e menos salientados por Presidentes e Chanceleres, conforme mostra o gráfico abaixo: 
+
+
+```{r aplic dic1 temas por cargo valor perc, echo=FALSE}
+
+aplica_quanti_dic <- dfm(primeira_amostra_aleatoria, tolower = TRUE, dictionary = dicionario_fase1)
+
+temas_cargo_dfm_perc <- as.data.frame(dfm_group(aplica_quanti_dic, groups = "cargo"))
+temas_cargo_dfm_perc <- gather(temas_cargo_dfm_perc, value = "freq", key = "temas", -document)
+
+fazer_perc <- select(descritivos_primeira_amostra, Tokens, cargo) %>%
+  group_by(cargo) %>%
+  summarize(Tokens = sum(Tokens))
+
+temas_cargo_dfm_perc$fazer_perc <- ifelse(temas_cargo_dfm_perc$document == "MRE", 278481, 260654)
+rm(fazer_perc)
+
+temas_cargo_dfm_perc$perc <- temas_cargo_dfm_perc$freq/temas_cargo_dfm_perc$fazer_perc
+
+```
+
+```{r graf aplic temas cargo perc, echo=FALSE, out.height="30%", fig.align="center"}
+
+ggplot(temas_cargo_dfm_perc, aes(x=reorder(temas, perc), y= perc, fill = document)) + geom_col() + coord_flip() + theme(axis.title = element_blank(), axis.text = element_text(size = rel(1), colour = "black")) + scale_fill_wsj() + theme_wsj(color = "white") + labs(fill = "") + scale_y_continuous(labels = scales::percent)
+
+```
+
+O gráfico informa a quantidade percentual de vezes em que os Presidentes e Chanceleres mencionaram as categorias em análise. Outra informação que pode ser obtida, através do explorar do dicionário inicial, é verificar como cada um dos emissores em seus Pares mencionaram as categorias dos dicionários. 
+
+    
+```{r aplic dic1 temas por par valor perc, echo=FALSE}
+
+temas_par_dfm_perc <- as.data.frame(dfm_group(aplica_quanti_dic, groups = c("cargo", "pares")))
+temas_par_dfm_perc <- temas_par_dfm_perc %>% separate(document, into = c("cargo", "par"), sep = "\\.")
+temas_par_dfm_perc <- gather(temas_par_dfm_perc, value = "freq", key = "temas", - cargo, - par)
+
+fazer_perc <- select(descritivos_primeira_amostra, Tokens, pares) %>%
+  group_by(pares) %>%
+  summarize(Tokens = sum(Tokens))
+
+temas_par_dfm_perc$fazer_perc <- ifelse(temas_par_dfm_perc$par == "Dilma e Figueiredo", 11805, ifelse(temas_par_dfm_perc$par == "Dilma e Patriota", 24090, ifelse(temas_par_dfm_perc$par == "Dilma e Vieira", 14499, ifelse(temas_par_dfm_perc$par == "FHC e Lafer", 66231, ifelse(temas_par_dfm_perc$par == "FHC e Lampreia", 99812
+, ifelse(temas_par_dfm_perc$par == "Lula e Amorim", 321451, 1247))))))
+
+temas_par_dfm_perc$perc <- temas_par_dfm_perc$freq/temas_par_dfm_perc$fazer_perc
+
+rm(fazer_perc)
+
+```
+
+```{r graf aplic temas par perc, fig.width=10, echo=FALSE, fig.pos="h"}
+
+ggplot(temas_par_dfm_perc, aes(x=reorder(temas, perc), y=perc, fill = cargo)) + geom_bar(stat = "identity") + coord_flip() + facet_wrap(~par, nrow = 2, scales = "free_x") + theme(axis.title = element_blank(), axis.text = element_text(colour = "black"), axis.text.x = element_text(angle = 45, hjust = 1)) + scale_y_continuous(labels = scales::percent) + scale_fill_wsj()
+
+```
+
+Por fim, é também possível comparar as ênfases temáticas em evolução temporal: 
+
+     
+```{r aplic dic1 temas por data e par valor perc, echo=FALSE}
+
+temas_data_dfm_perc <- as.data.frame(dfm_group(aplica_quanti_dic, groups = c("ano", "cargo")))
+temas_data_dfm_perc <- temas_data_dfm_perc %>% separate(document, into = c("ano", "cargo"), sep = "\\.")
+temas_data_dfm_perc <- gather(temas_data_dfm_perc, value = "freq", key = "temas", - cargo, - ano)
+
+fazer_perc <- select(descritivos_primeira_amostra, Tokens, ano) %>%
+  group_by(ano) %>%
+  summarize(Tokens = sum(Tokens))
+
+temas_data_dfm_perc$fazer_perc <- ifelse(temas_data_dfm_perc$ano == "1995", 11745, ifelse(temas_data_dfm_perc$ano == "1996", 26195, ifelse(temas_data_dfm_perc$ano == "1997", 6865, ifelse(temas_data_dfm_perc$ano == "1998", 15010, ifelse(temas_data_dfm_perc$ano == "1999", 10930, ifelse(temas_data_dfm_perc$ano == "2000", 25617, ifelse(temas_data_dfm_perc$ano == "2001", 48933, ifelse(temas_data_dfm_perc$ano == "2002", 20748, ifelse(temas_data_dfm_perc$ano == "2003", 41775, ifelse(temas_data_dfm_perc$ano == "2004", 36269, ifelse(temas_data_dfm_perc$ano == "2005", 52758, ifelse(temas_data_dfm_perc$ano == "2006", 46996, ifelse(temas_data_dfm_perc$ano == "2007", 31963, ifelse(temas_data_dfm_perc$ano == "2008", 23442, ifelse(temas_data_dfm_perc$ano == "2009", 48401, ifelse(temas_data_dfm_perc$ano == "2010", 39847, ifelse(temas_data_dfm_perc$ano == "2011", 13223, ifelse(temas_data_dfm_perc$ano == "2012", 13223, ifelse(temas_data_dfm_perc$ano == "2013", 3549, ifelse(temas_data_dfm_perc$ano == "2014", 8256, ifelse(temas_data_dfm_perc$ano == "2015", 8565, 7181)))))))))))))))))))))
+
+rm(fazer_perc)
+
+temas_data_dfm_perc$perc <- temas_data_dfm_perc$freq/temas_data_dfm_perc$fazer_perc
+
+
+```
+
+
+```{r graf aplic data par perc, echo=FALSE, out.height="70%", out.width="80%", fig.align="center"}
+
+ggplot(temas_data_dfm_perc, aes(x=ano, y=perc, group = cargo, colour = cargo)) + geom_line() + facet_wrap(~temas, nrow = 4) +  theme(axis.text.x = element_text(angle = 90, hjust = 1), axis.title = element_blank(), axis.text = element_text(colour = "black", size = rel(.9))) + scale_y_continuous(labels = scales::percent)
+
+```
+
+Tendo visto como o dicionário provê respostas numéricas para cada emissor e categoria, é possível partir para a apresentação dos primeiros resultados da fase de exploração textual. Conforme explicado, o objetivo é descobrir certos padrões e termos que precisam ser incorporados ou alterados na versão final do dicionário. 
+
+
+# 7. Exploração Textual [Primeiros Resultados]
+
+A fase de exploração textual foi dividida nas seguintes etapas: 
+
+
+```{r fases da exploração, echo=FALSE}
+
+fases <- data.frame(Fase = c("Visão Estrutural do Corpus", "Visão Estrutural do Corpus", "Visão Categórica do Corpus"), Etapa = c("Mineração Textual Geral", "Topic Models", "Exploração Textual por Categoria"), Status = c("Feito", "Feito", "Fazer"))
+
+knitr::kable(fases)
+```
+
+No presente documento, estão apenas achados referentes aos passos já concluídos da exploração textual. Porém, ainda que incompleto, o que será apresentado aqui já contribui, enormemente, com reflexões e constatações que interfirirão diretamente nas mudanças a serem feitas no dicionário final. Vejamos os resultados da Mineração Textual Geral: 
+
+
+```{r TM global, echo=FALSE, message=FALSE, warning=FALSE}
+
+explor_text_dfm <- dfm(primeira_amostra_aleatoria, tolower = TRUE, remove = c(stopwords("portuguese"), "é", "the", "porque", "então"), remove_punct = TRUE, remove_numbers = TRUE)
+explor_text_dfm <- dfm_wordstem(explor_text_dfm, language = "portuguese")
+
+explor_text_dfm <- dfm_trim(explor_text_dfm, min_docfreq = 0.01, max_docfreq = 0.99, docfreq_type = "prop")
+
+explor_text_dfm_tfidf <- dfm_tfidf(explor_text_dfm)
+
+
+```
+
+
+Os 300 termos mais repetidos no Corpus são:
+
+```{r top, fig.align="center", echo=FALSE}
+
+textplot_wordcloud(explor_text_dfm, color = c("black", "red", "blue", "darkgreen"), max_words = 300, rotation = .25)
+
+```
+
+Embora informativo, o resultado acima se baseia em uma medida de repetição de termos (*term frequency*). O que se mostra, portanto, são as palavras mais repetidas em todos os documentos, de forma agregada. Uma forma de encontrar termos mais raros nos documentos é com a estatística (*term frequency-inverse document frequency (tfidf)*). Grosso modo, ela penaliza valores que se repetem em todos os documentos e valoriza aqueles que aparecem muito em pouco documentos, a saber:
+
+```{r toptfidf, echo=FALSE, fig.align="center", out.height="40%", fig.pos="h"}
+
+explor_text_top_feat <- textstat_frequency(explor_text_dfm_tfidf, n = 40)
+
+ggplot(explor_text_top_feat, aes(x=reorder(feature, frequency), y=frequency)) + geom_point(shape = 20, size = 2) + coord_flip() + geom_segment(aes(x=feature, y = frequency, xend = feature, yend =0)) + theme_calc() + theme(axis.title = element_blank(), axis.text = element_text(size = rel(1)))
+
+```
+
+Agora, é valido verificar como os termos mais mencionados se relacionam entre si. Para tanto, calculamos a seguinte rede de co-ocorrência:
+
+
+```{r network, echo=FALSE, fig.align="center"}
+
+coocorrencia <- dfm_trim(explor_text_dfm, min_termfreq = 300)
+textplot_network(coocorrencia, omit_isolated = TRUE)
+
+rm(dicionario_fase1)
+rm(descritivos_primeira_amostra)
+
+```
+
+Outra forma de verificar variações lexicais é por meio de análise de *collocations*. Trata-se da contabilização das X palavras que mais aparecem juntas. Aqui, veremos quais são os 5 termos que mais aparecem em sequência:
+
+```{r collocations, echo=FALSE, fig.align="center", out.height="40%"}
+
+collocations <- textstat_collocations(primeira_amostra_aleatoria, size = 5, min_count = 8, tolower = TRUE)
+
+collocations <- as.data.frame(collocations)
+collocations <- collocations[1:40,]
+
+ggplot(collocations, aes(x=reorder(collocation, count), y=count)) + geom_col() + coord_flip() + theme(axis.title = element_blank())
+
+```
+
+
+Uma forma interessante de encontrar expressões importantes e específicas é através da análise de nomes próprios que aparecem no Corpus. Eles podem mostrar personalidades importantes, referências a lugares e instituições. O gráfico abaixo apresenta os 40 mais repetidos na amostra textual:
+
+```{r nomes, echo=FALSE, fig.align="center", out.height="40%"}
+
+nomes_prop <- tokens(primeira_amostra_aleatoria)
+nomes_prop <- tokens_remove(nomes_prop, stopwords("portuguese"), padding = TRUE)
+nomes_prop <- tokens_select(nomes_prop, "^([A-Z][a-z\\-]{2,})", valuetype = "regex", case_insensitive = FALSE, padding = TRUE)
+
+nomes_prop <- textstat_collocations(nomes_prop, size = 3, tolower = FALSE)
+
+nomes_prop <- nomes_prop[1:40,]
+
+ggplot(nomes_prop, aes(x=reorder(collocation, count), y=count)) + geom_col() + coord_flip() + theme(axis.title = element_blank())
+
+```
+
+
+Para finalizar essa visão mais estrutural, vejamos como uma modelagem baseada em Topic Models categorizaria as palavras da amostra textual. Trata-se de uma modelagem automotizada em que cálculos de probabilidade são realizados com o intuito de alocar termos em categorias específicas: 
+
+
+```{r topicmodels, echo=FALSE}
+
+tm_explor <- dfm(primeira_amostra_aleatoria, tolower = TRUE, remove = c(stopwords("portuguese"), "é", "the", "porque", "então"), remove_punct = TRUE, remove_numbers = TRUE)
+tm_explor <- dfm_wordstem(tm_explor, language = "portuguese")
+tm_explor <- dfm_trim(tm_explor, min_termfreq = 0.95, termfreq_type = "quantile", max_docfreq = 0.3, docfreq_type = "prop")
+tm_explor <- tm_explor[ntoken(tm_explor)>0, ]
+
+tm_explor <- convert(tm_explor, to = "topicmodels")
+tm_modelo <- LDA(tm_explor, k =8)
+
+terms(tm_modelo, 10)
+
+```
+
+
+# 8. Reflexões para a versão final do dicionário
+
+As mudanças listadas aqui possuem um caratér tentativo, reflexivo e, portanto, temporário. Elas são sugestões que precisam ser melhor aperfeiçoadas. Uma grande oportunidade para isso é com a banca de qualificação e as avaliações críticas dos examinadores. Em geral, até o momento, as modificações foram provenientes de três fontes principais: a) A divisão que o Itamaraty usa para agrupar determinados temas em seu site (na aba de Política Externa); b) Os resultados encontrados em pesquisa anterior publicados no artigo de [Rocha (2017)](https://cartainternacional.abri.org.br/Carta/article/view/707); e, c) Os achados trazidos nesse documento extraídos a partir da exploração do Corpus. Sem mais delongas, seguem as principais alterações para o dicionário final da tese:  
+
+
+* __Alterações derivadas da aba de Política Externa do site do Itamaraty:__
+    + Inclusão da categoria "cultura" para contabilizar a quantidade de menções a arte, música, literatura, museus, audiovisual, teatro, artes cênicas e instituições culturais internacionais;
+    + Inclusão da categoria "países e regiões" para contabilizar a quantidade de referências aos paises e regiões do globo (de certo modo estaríamos mensurando também as relações bilaterais);
+    + Na categoria "economia" seria interessante incluir também termos relacionados com comércio exterior, sistema internacional monetário e temas afins;
+    + Na categoria "Instituições Internacionais" adicionar um conjunto de organismos regionais e multilaterais, dentre os quais: Unasul, CASA, Celac, CALC, OTCA, Cepal, GATT, OCDE, Aliança do Pacífico, Liga Árabe, OTAN, ASEAN, APEC, BRICS, IBAS, ASA, ASPA, FOCALAL, União Áfricana, UNAOC, Conferência Ibero-americana;
+
+* __Alterações derivadas dos resultados encontrados em Rocha (2017):__ 
+    + Adicionar categoria para contabilizar referências às menções sobre Política Externa como Política Pública;
+    + Incluir categoria sobre ideologização, politização e partidarização da Política Externa Brasileira; 
+    + Prever uma categoria sobre diretrizes presidenciais, diplomacia presidencial, iniciativas e a própria figura presidencial;
+    + Adicionar categoria com referências ao Itamaraty, funcionários, diplomacia, diplomatas e figuras ilustres;
+    + Adicionar uma categoria sobre identidade internacional do Brasil;
+    
+* __Alterações derivadas do achados da exploração do Corpus da tese__:
+    + __Ao verificar os termos mais repetidos no Corpus, percebe-se a necessidade de:__
+        a) Adicionar mais termos à categoria "economia", tais quais: dumping, anti-dumping, salárial, salário, rendimentos, liberalismo, neo-liberalismo, consenso de Washington, capitalismo, capital, marxismo, socialismo, micro-crédito, crédito, risco-brasil, microeconomia, macroeconomia, inflação, deflação. 
+        b) Adicionar termos referentes à TV e televisão na nova categoria "cultura"
+        c) Adicionar uma categoria com menções à ciência e tecnologia e incluir termos como: cientista, ciêntífico, nanotecnologia;
+        d) Adicionar uma categoria com menções à religião com termos sobre cristão, cristianismo, judeu, judaico, islã, budismo, etc;
+        e) Adicionar na categoria "meio ambiente": ecologia, terremoto, biodiversidade;
+    + __Ao verificar termos mais específicos do Corpus (tfidf):__
+        a) Atesta a importância de uma categoria para contablizar países e regiões;
+        b) Reafirma a relevância de uma nova categoria para "cultura"
+        c) Há um padrão de menções a instituições políticas domésticas como parlamento, congresso, parlamentares, etc. Pensar em uma categoria;
+        d) Aparecem menções a carvão, energia nuclear, gasoduto, biocombustível que sugere a importância de subdividir meio ambiente em um ramo para energia;
+        e) Em desigualdade social seria interessante uma sub-categoria para contablizar menções a minorias, gênero, homem, mulheres, juventude. Assim, seria interessante mudar o nome para "questões sociais";
+        f) Na categoria "economia" adicionar termos referentes à moeda e monetário;
+    + __Ao verificar os resultados para a análise de expressões (Collocations):__
+        a) A relevância das menções a América do Sul precisa ser incorporada no dicionário;
+        b) Atesta a importância de categorias para menções aos Presidentes e aos diplomatas tradicionais;
+        c) Adicionar na nova categoria "cultura" as menções a rádio;
+    + __Na análise dos nomes próprios:__
+        a) Verifica-se demais a relevância de um conjunto enorme de personalidades governamentais. O problema é que não é possível exaurir as possibilidades em um dicionário. Portanto, uma categoria como essa não pode ser adicionada por falta de modos de operacionalização;
+        b) Dentro das menções ao Mercosul seria válido prever também as referências aos seus órgãos como Comissão Parlamentar Conjunta, Grupo Mercado Comum, Parlamento do Mercosul, etc. 
+        c) Dentro da ONU, arranjar também sub-categorias para suas distintas agências;
+        d) Na categoria referente a aspectos sociais inserir: Programa Comunidade Solidária;
+    + __O modelo de Topic Models possui grandes limitações, mas, de um modo geral, atesta tudo que já foi inserido até aqui.__ 
+  
+    
+Portanto, levando em conta cada uma dessas possibilidades de alteração, o dicionário final deve receber uma nova estrutura que reflita melhor o contexto textual. Nesse aspecto, uma importante atualização será a divisão das categorias em novas sub-categorias. Assim, por ora, pensamos na seguinte estrutura de categorização: 
+
+* Instituições Internacionais
+    + Instituições Regionais
+    + Instituições Multilaterais
+* Países e Regiões
+    + África
+    + Ásia
+    + América
+    + Europa
+    + Oceania
+* Identidade Internacional do Brasil
+* Itamaraty
+* Cultura
+* Presidentes e Diplomacia Presidencial
+* Economia
+* Meio Ambiente
+    + Conferências e Acordos
+    + Recursos Energéticos
+    + Desenvolvimento Sustentável (Sustentabilidade)
+    + Geral
+* Questões Sociais
+* Cooperação Internacional
+* Direitos Humanos e Democracia
+* Paz e Segurança Internacional
+* Natureza da Política Externa
+    + Política Externa como Política Pública
+    + Política Externa como Política de Estado
+    + Ideologização da Política Externa
+
+
+
+
+
