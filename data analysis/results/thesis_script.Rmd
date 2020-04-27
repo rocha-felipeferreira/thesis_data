@@ -655,7 +655,7 @@ brazil_mustshould_mre_kwic$merged <- paste(brazil_mustshould_mre_kwic$pre, brazi
 
 brazil_mustshould_mre_kwic$merged <- str_squish(brazil_mustshould_mre_kwic$merged)
 
-gwordtree(word = brazil_mustshould_mre_kwic$merged, firstword = "brasil", width = 1000)
+gwordtree(word = brazil_mustshould_mre_kwic$merged, firstword = "brasil", width = 1200)
 
 
 #Presidentes
@@ -669,7 +669,7 @@ brazil_mustshould_pres_kwic$merged <- paste(brazil_mustshould_pres_kwic$pre, bra
 
 brazil_mustshould_pres_kwic$merged <- str_squish(brazil_mustshould_pres_kwic$merged)
 
-gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "brasil", width = 1000)
+gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "deve", width = 1200)
 
 ```
 
