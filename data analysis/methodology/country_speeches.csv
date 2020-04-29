@@ -1,145 +1,144 @@
 country,position,continent,n
-África do Sul,PRES,ÁFRICA,11
-Alemanha,MRE,EUROPA,8
-Alemanha,PRES,EUROPA,10
+South Africa,PRES,ÁFRICA,11
+Germany,MRE,EUROPA,8
+Germany,PRES,EUROPA,10
 Angola,PRES,ÁFRICA,4
-Arábia Saudita,MRE,ÁSIA,2
-Arábia Saudita,PRES,ÁSIA,1
-Argélia,MRE,ÁFRICA,1
-Argélia,PRES,ÁFRICA,3
+Saudi Arabia,MRE,ÁSIA,2
+Saudi Arabia,PRES,ÁSIA,1
+Algeria,MRE,ÁFRICA,1
+Algeria,PRES,ÁFRICA,3
 Argentina,MRE,AMÉRICA,20
 Argentina,PRES,AMÉRICA,23
 Austria,PRES,EUROPA,1
-Bélgica,MRE,EUROPA,3
-Bélgica,PRES,EUROPA,6
-Benim,PRES,ÁFRICA,1
-Bissau,PRES,ÁFRICA,1
+Belgium,MRE,EUROPA,3
+Belgium,PRES,EUROPA,6
+Benin,PRES,ÁFRICA,1
+﻿Guinea-Bissau ,PRES,ÁFRICA,1
 Bolivia,MRE,AMÉRICA,6
 Bolivia,PRES,AMÉRICA,8
-Botsuana,PRES,ÁFRICA,1
-Brasil,MRE,AMÉRICA,585
-Brasil,PRES,AMÉRICA,432
-Burquina Faso,PRES,ÁFRICA,4
-Cabo Verde,PRES,ÁFRICA,4
-Camerum,PRES,ÁFRICA,1
-Canadá,MRE,AMÉRICA,1
-Canadá,PRES,AMÉRICA,3
-Catar,MRE,ÁSIA,2
-Catar,PRES,ÁSIA,3
-Cazaquistão,PRES,ÁSIA,1
+﻿Botswana,PRES,ÁFRICA,1
+Brazil,MRE,AMÉRICA,585
+Brazil,PRES,AMÉRICA,432
+﻿Burkina Faso ,PRES,ÁFRICA,4
+﻿Cape Verde ,PRES,ÁFRICA,4
+﻿Cameroon ,PRES,ÁFRICA,1
+Canada,MRE,AMÉRICA,1
+Canada,PRES,AMÉRICA,3
+﻿Qatar ,MRE,ÁSIA,2
+Qatar,PRES,ÁSIA,3
+﻿Kazakhstan,PRES,ÁSIA,1
 Chile,MRE,AMÉRICA,13
 Chile,PRES,AMÉRICA,15
-China,MRE,ÁSIA,4
+China,MRE,ÁSIA,5
 China,PRES,ÁSIA,13
-Cingapura,MRE,ÁSIA,1
-Colômbia,MRE,AMÉRICA,5
-Colômbia,PRES,AMÉRICA,2
-Congo,PRES,ÁFRICA,2
-Coreia,MRE,ÁSIA,1
-Coreia,PRES,ÁSIA,3
-Coreia do Sul,PRES,ÁSIA,5
+﻿Singapore ,MRE,ÁSIA,1
+Colombia,MRE,AMÉRICA,5
+Colombia,PRES,AMÉRICA,2
+﻿Republic of Congo ,PRES,AFRICA,2
+﻿Democratic Republic of the Congo ,PRES,ÁFRICA,2
+South Korea,MRE,ÁSIA,1
+South Korea,PRES,ÁSIA,3
+South Korea,PRES,ÁSIA,5
 Costa Rica,MRE,AMÉRICA,2
 Costa Rica,PRES,AMÉRICA,4
 Cuba,MRE,AMÉRICA,2
 Cuba,PRES,AMÉRICA,2
-Dinamarca,PRES,EUROPA,5
-Egito,MRE,ÁSIA,1
-Egito,MRE,ÁFRICA,1
-Egito,PRES,ÁSIA,2
+﻿Denmark ,PRES,EUROPA,5
+﻿Egypt,MRE,ÁSIA,2
+﻿Egypt,PRES,ÁSIA,2
 El Salvador,PRES,AMÉRICA,2
-Equador,MRE,AMÉRICA,4
-Equador,PRES,AMÉRICA,6
-Eslovaquia,PRES,EUROPA,3
-Espanha,MRE,EUROPA,8
-Espanha,PRES,EUROPA,14
-Etiopia,MRE,ÁFRICA,2
-EUA,MRE,AMÉRICA,58
-EUA,PRES,AMÉRICA,45
-Finlândia,PRES,EUROPA,4
-França,PRES,EUROPA,18
-França,MRE,EUROPA,20
-Gabão,PRES,ÁFRICA,2
-Gana,PRES,ÁFRICA,8
+Ecuador,MRE,AMÉRICA,4
+Ecuador,PRES,AMÉRICA,6
+﻿Slovakia,PRES,EUROPA,3
+Spain,MRE,EUROPA,8
+Spain,PRES,EUROPA,14
+﻿Ethiopia ,MRE,ÁFRICA,2
+USA,MRE,AMÉRICA,58
+USA,PRES,AMÉRICA,45
+Finland,PRES,EUROPA,4
+France,PRES,EUROPA,18
+France,MRE,EUROPA,20
+Gabon,PRES,ÁFRICA,2
+Ghana,PRES,ÁFRICA,8
 Guatemala,MRE,AMÉRICA,2
-Guiana,MRE,AMÉRICA,1
-Guiana,PRES,AMÉRICA,5
-Guiné Bissau,MRE,ÁFRICA,1
-Guiné Equatorial,MRE,ÁFRICA,2
-Guiné Equatorial,PRES,ÁFRICA,2
+French Guiana,MRE,AMÉRICA,1
+French Guiana,PRES,AMÉRICA,5
+﻿Guinea-Bissau ,MRE,ÁFRICA,1
+﻿Equatorial Guinea ,MRE,ÁFRICA,2
+﻿Equatorial Guinea ,PRES,ÁFRICA,2
 Haiti,PRES,AMÉRICA,4
 Honduras,PRES,AMÉRICA,1
-Hong Kong,MRE,ÁSIA,1
-Índia,MRE,ÁSIA,3
-Índia,PRES,ÁSIA,13
-Indonésia,MRE,ÁSIA,2
-Indonésia,PRES,ÁSIA,2
-Inglaterra,MRE,EUROPA,8
-Inglaterra,PRES,EUROPA,2
-Irã,MRE,ÁSIA,1
-Irã,PRES,ÁSIA,2
-Itália,MRE,EUROPA,6
-Itália,PRES,EUROPA,7
+India,MRE,ÁSIA,3
+India,PRES,ÁSIA,13
+Indonesia,MRE,ÁSIA,2
+Indonesia,PRES,ÁSIA,2
+UK,MRE,EUROPA,8
+UK,PRES,EUROPA,2
+Iran,MRE,ÁSIA,1
+Iran,PRES,ÁSIA,2
+Italy,MRE,EUROPA,6
+Italy,PRES,EUROPA,7
 Jamaica,PRES,AMÉRICA,3
-Japão,MRE,ÁSIA,6
-Japão,PRES,ÁSIA,7
-Jordânia,MRE,ÁSIA,1
-Líbano,MRE,ÁSIA,1
-Líbano,PRES,ÁSIA,2
-Lima,MRE,AMÉRICA,1
-Malásia,PRES,ÁSIA,1
-Marrocos,MRE,ÁFRICA,1
-Maurícia,MRE,ÁFRICA,1
-México,MRE,AMÉRICA,5
-México,PRES,AMÉRICA,9
-Moçambique,MRE,ÁFRICA,1
-Moçambique,PRES,ÁFRICA,3
+Japan,MRE,ÁSIA,6
+Japan,PRES,ÁSIA,7
+Jordan,MRE,ÁSIA,1
+Lebanon,MRE,ÁSIA,1
+Lebanon,PRES,ÁSIA,2
+Peru,MRE,AMÉRICA,1
+Malasia,PRES,ÁSIA,1
+﻿Morocco,MRE,ÁFRICA,1
+﻿Mauritius ,MRE,ÁFRICA,1
+Mexico,MRE,AMÉRICA,5
+Mexico,PRES,AMÉRICA,9
+﻿Mozambique,MRE,ÁFRICA,1
+﻿Mozambique,PRES,ÁFRICA,3
 Namibia,PRES,ÁFRICA,2
 Nicaragua,PRES,AMÉRICA,3
-Nigéria,PRES,ÁFRICA,7
-Noruega,MRE,EUROPA,1
-Noruega,PRES,EUROPA,3
-Paises Baixos,PRES,EUROPA,6
-Palestina,PRES,ÁSIA,1
-Panamá,MRE,AMÉRICA,1
-Panamá,PRES,AMÉRICA,4
-Paquistão,MRE,ÁSIA,1
+Nigeria,PRES,ÁFRICA,7
+﻿Norway,MRE,EUROPA,1
+﻿Norway,PRES,EUROPA,3
+﻿Netherlands,PRES,EUROPA,6
+﻿Palestine,PRES,ÁSIA,1
+Panama,MRE,AMÉRICA,1
+Panama,PRES,AMÉRICA,4
+﻿Pakistan,MRE,ÁSIA,1
 Paraguai,MRE,AMÉRICA,6
 Paraguai,PRES,AMÉRICA,10
 Peru,MRE,AMÉRICA,3
 Peru,PRES,AMÉRICA,10
-Polônia,MRE,EUROPA,1
-Polônia,PRES,EUROPA,4
+﻿Poland ,MRE,EUROPA,1
+﻿Poland ,PRES,EUROPA,4
 Portugal,MRE,EUROPA,6
 Portugal,PRES,EUROPA,26
-Quênia,MRE,ÁFRICA,1
-Quênia,PRES,ÁFRICA,2
-Reino Unido,MRE,EUROPA,7
-Reino Unido,PRES,EUROPA,13
-Rep Dominicana,MRE,AMÉRICA,1
-Rep Dominicana,PRES,AMÉRICA,1
-Rep Tcheca,PRES,EUROPA,2
-Rússia,MRE,ÁSIA,3
-Rússia,PRES,ÁSIA,9
-São Tomé e Principe,PRES,ÁFRICA,2
-São Tomé e Principe,PRES,AMÉRICA,1
+﻿Kenya,MRE,ÁFRICA,1
+﻿Kenya,PRES,ÁFRICA,2
+UK,MRE,EUROPA,7
+UK,PRES,EUROPA,13
+﻿Dominican Republic ,MRE,AMÉRICA,1
+﻿Dominican Republic ,PRES,AMÉRICA,1
+Czech Republic,PRES,EUROPA,2
+Russia,MRE,ÁSIA,3
+Russia,PRES,ÁSIA,9
+﻿Sao Tome and Principe ,PRES,ÁFRICA,2
+﻿Sao Tome and Principe ,PRES,AMÉRICA,1
 Senegal,PRES,ÁFRICA,3
-Síria,PRES,ÁSIA,2
-Suécia,PRES,EUROPA,6
-Suiça,MRE,EUROPA,23
-Suiça,PRES,EUROPA,15
+﻿Syria,PRES,ÁSIA,2
+﻿Sweden,PRES,EUROPA,6
+﻿Switzerland,MRE,EUROPA,23
+﻿Switzerland,PRES,EUROPA,15
 Suriname,PRES,AMÉRICA,2
-Tanzânia,MRE,ÁFRICA,1
-Tanzânia,PRES,ÁFRICA,1
-Timor Leste,MRE,ÁSIA,1
-Timor Leste,PRES,ÁSIA,3
-Trinidade Tobago,PRES,AMÉRICA,2
-Tunísia,MRE,ÁFRICA,1
-Turquia,MRE,ÁSIA,1
-Turquia,PRES,ÁSIA,1
-Ucrânia,PRES,EUROPA,4
-Uruguai,MRE,AMÉRICA,11
-Uruguai,PRES,AMÉRICA,11
+﻿Tanzania,MRE,ÁFRICA,1
+﻿Tanzania,PRES,ÁFRICA,1
+﻿Timor-Leste ,MRE,ÁSIA,1
+﻿Timor-Leste ,PRES,ÁSIA,3
+Tobago,PRES,AMÉRICA,2
+Tunisia,MRE,ÁFRICA,1
+﻿Turkey,MRE,ÁSIA,1
+﻿Turkey,PRES,ÁSIA,1
+﻿Ukraine,PRES,EUROPA,4
+﻿Uruguay ,MRE,AMÉRICA,11
+﻿Uruguay ,PRES,AMÉRICA,11
 Venezuela,MRE,AMÉRICA,3
 Venezuela,PRES,AMÉRICA,19
-Vietnã,PRES,ÁSIA,1
-Zâmbia,PRES,ÁFRICA,1
+Vietnam,PRES,ÁSIA,1
+Zambia,PRES,ÁFRICA,1
