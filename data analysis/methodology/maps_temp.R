@@ -24,8 +24,12 @@ teste$brk <- cut(teste$n,
 
 
 ggplot(teste, aes(x = long, y = lat, group = group, fill = brk)) +
-  geom_polygon(colour = "black", size = .2, alpha = .5) + theme_void() +
-scale_fill_manual(values = c("0" = "gray80", "1 - 14" = "orange", "15 - 49" = "darkgreen", "50 - 585" = "blue")) 
-
-
-s
+  geom_polygon(colour = "black", size = .1, alpha = .9) + theme_void() +
+  scale_fill_brewer(palette="PuBu") +
+  theme(legend.text = element_text(size = rel(1)), 
+        legend.title = element_blank(), 
+        legend.position= c(0.09, 0.15), 
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
+  labs(title = "Frequência de Discursos dos Chanceleres por País")
+  
+  
