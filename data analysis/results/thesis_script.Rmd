@@ -674,32 +674,6 @@ gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "deve", width =
 ```
 
 
-```{r brazil_can}
-
-#Chanceleres
-brazil_can_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
-
-brazil_can_mre_kwic <- kwic(brazil_can_mre, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
-
-brazil_can_mre_kwic$merged <- paste(brazil_can_mre_kwic$pre, brazil_can_mre_kwic$keyword, brazil_can_mre_kwic$post)
-
-brazil_can_mre_kwic$merged <- str_squish(brazil_can_mre_kwic$merged)
-
-gwordtree(word = brazil_can_mre_kwic$merged, firstword = "brasil", width = 1000)
-
-#Presidentes
-brazil_can_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
-
-brazil_can_pres_kwic <- kwic(brazil_can_pres, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
-
-brazil_can_pres_kwic$merged <- paste(brazil_can_pres_kwic$pre, brazil_can_pres_kwic$keyword, brazil_can_pres_kwic$post)
-
-brazil_can_pres_kwic$merged <- str_squish(brazil_can_pres_kwic$merged)
-
-gwordtree(word = brazil_can_pres_kwic$merged, firstword = "brasil", width = 1000)
-
-```
-
 ```{r brazil_needs}
 
 #Chanceleres
@@ -726,6 +700,45 @@ brazil_needs_pres_kwic$merged <- str_squish(brazil_needs_pres_kwic$merged)
 gwordtree(word = brazil_needs_pres_kwic$merged, firstword = "brasil", width = 1000)
 
 ```
+
+I just need the following values for the comparative graph. 
+
+```{r brazil_can}
+
+#Chanceleres
+brazil_can_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
+
+brazil_can_mre_kwic <- kwic(brazil_can_mre, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_can_mre_kwic$merged <- paste(brazil_can_mre_kwic$pre, brazil_can_mre_kwic$keyword, brazil_can_mre_kwic$post)
+
+brazil_can_mre_kwic$merged <- str_squish(brazil_can_mre_kwic$merged)
+
+#Presidentes
+brazil_can_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
+
+brazil_can_pres_kwic <- kwic(brazil_can_pres, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+
+brazil_can_pres_kwic$merged <- paste(brazil_can_pres_kwic$pre, brazil_can_pres_kwic$keyword, brazil_can_pres_kwic$post)
+
+brazil_can_pres_kwic$merged <- str_squish(brazil_can_pres_kwic$merged)
+
+```
+
+### 6.5 Wordtrees: Graph
+
+
+```{r wordtrees_graph}
+
+wordtree_df <- tibble(sentence = c("Necessidade", "Possibilidade", "Defesa", "Deveres"), valores_mre = c(23, 45, 22, 18), valores_pres = c(43, 87, 5, 10))
+
+wordtree_df <- gather(wordtree_df, key = "Agentes", value = "valores", -sentence)
+
+ggplot(wordtree_df, aes(x = sentence, y = valores, fill = Agentes)) +
+  geom_col() 
+
+```
+
 
 ## 7 Agents: The 3rd Dimension
 
