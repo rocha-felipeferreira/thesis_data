@@ -734,8 +734,15 @@ wordtree_df <- tibble(sentence = c("Necessidade", "Possibilidade", "Defesa", "De
 
 wordtree_df <- gather(wordtree_df, key = "Agentes", value = "valores", -sentence)
 
-ggplot(wordtree_df, aes(x = sentence, y = valores, fill = Agentes)) +
-  geom_col() 
+ggplot(wordtree_df, aes(x = sentence, y = valores)) +
+  geom_line(aes(group = sentence)) +
+  geom_label(aes(label = valores, fill = Agentes), size = 6) + 
+  coord_flip() +
+  thesis_theme() +
+  theme(axis.text.x = element_blank(), 
+        axis.title = element_blank(), 
+        panel.background = element_rect(fill = "white", colour = "black")) +
+  scale_fill_manual(values = c("valores_mre" = "gray75", "valores_pres" = "white"), labels = c("valores_mre" = "MRE", "valores_pres" = "PRES")) 
 
 ```
 
