@@ -24,7 +24,7 @@ teste$brk <- cut(teste$n,
 
 
 ggplot(teste, aes(x = long, y = lat, group = group, fill = brk)) +
-  geom_polygon(colour = "black", size = .1, alpha = .9) + theme_void() +
+  geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
   scale_fill_brewer(palette="PuBu") +
   theme(legend.text = element_text(size = rel(1)), 
         legend.title = element_blank(), 
@@ -32,4 +32,30 @@ ggplot(teste, aes(x = long, y = lat, group = group, fill = brk)) +
         plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
   labs(title = "Frequência de Discursos dos Chanceleres por País")
   
-  
+
+# Presidentes
+
+
+quantd_disc_pres <- quantd_disc %>% filter(position == "PRES") %>% 
+  select(c(1,4))
+
+colnames(quantd_disc_pres) <- c("region", "n")
+
+teste_pres <- left_join(mapa_mundo, quantd_disc_pres)
+teste_pres <- mutate(teste_pres, n = ifelse(is.na(n), 0, n))
+
+teste_pres$brk <- cut(teste_pres$n, 
+                 breaks = c(-1, 0, 15, 50, 432), 
+                 labels = c("0", "1 - 14", "15 - 49", "50 - 432"))
+
+
+ggplot(teste_pres, aes(x = long, y = lat, group = group, fill = brk)) +
+  geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
+  scale_fill_brewer(palette="PuBu") +
+  theme(legend.text = element_text(size = rel(1)), 
+        legend.title = element_blank(), 
+        legend.position= c(0.09, 0.15), 
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
+  labs(title = "Frequência de Discursos dos Presidentes por País")
+
+
