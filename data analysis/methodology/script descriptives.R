@@ -263,7 +263,7 @@ country_speeches_pres_df <- mutate(country_speeches_pres_df, values = ifelse(is.
 
 country_speeches_pres_df$brk <- cut(country_speeches_pres_df$values, 
                                    breaks = c(-1, 0, 15, 50, 432), 
-                                   labels = c("0", "1 - 14", "15 - 432", "50 - 585"))
+                                   labels = c("0", "1 - 14", "15 - 49", "50 - 432"))
 
 
 country_speeches_pres_plot <- ggplot(country_speeches_pres_df, aes(x = long, y = lat, group = group, fill = brk)) +
@@ -273,7 +273,7 @@ country_speeches_pres_plot <- ggplot(country_speeches_pres_df, aes(x = long, y =
         legend.title = element_blank(), 
         legend.position= c(0.09, 0.15), 
         plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
-  labs(title = "Frequência de Discursos dos Chanceleres por País")
+  labs(title = "Frequência de Discursos dos Presidentes por País")
 
 ## ggsave(filename = "map_pres.png", plot = country_speeches_pres_plot, dpi = 500, width = 9.5, height = 5) 
 
