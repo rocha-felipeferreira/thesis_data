@@ -7,6 +7,8 @@ library(tidyverse)
 library(lubridate)
 library(ggrepel)
 library(tidytext)
+library(ggthemes)
+library(viridis)
 
 thesis_theme <- function(){
   theme(axis.title = element_text(size = rel(1.2), colour = "black", face = "bold.italic"),
@@ -201,6 +203,8 @@ table(corpus_data_source$type)
 
 # Country -----------------------------------------------------------------
 
+## Producing the Data Source
+
 country_speeches <- corpus_data_source %>% select(country, position, continent) %>% drop_na()
 
 country_speeches$continent <- str_to_upper(country_speeches$continent)
@@ -213,25 +217,65 @@ country_speeches <- country_speeches %>% group_by_all() %>% count() %>% ungroup(
 
 # write_csv(country_speeches, "country_speeches.csv") #edit country names
 
+## Here, I saved the csv, translated the countries' names, and now I am importing again so I can use it. 
+
 country_speeches <- read_csv("data analysis/methodology/country_speeches.csv")
 
-country_speeches_plot <- ggplot(country_speeches, aes(x = reorder(country, n), y = n)) +
-  geom_line(aes(group = country)) + 
-  geom_point(aes(fill = position), size = 2.5, shape = 21) + 
-  facet_wrap(~continent, scales = "free", strip.position = "right") + coord_flip() + 
-  thesis_theme() +
-  scale_fill_manual(values = c("MRE" = "white", "PRES" = "black")) +
-  theme(strip.text = element_text(size = rel(1.2)), 
-        panel.grid.major.x = element_blank(),
-        panel.grid.major.y = element_line(colour = "gray75"),
-        panel.grid.minor = element_blank(), 
-        panel.background = element_rect(fill = "white", colour = "black"), strip.background = element_rect(fill = "white", colour = "black"), 
-        strip.text.y = element_text(face = "bold")) +
-  ylab("Nº de Discursos") + xlab("Países")
+## Map showing Chancellors' speeches
 
-country_speeches_plot
+country_speeches_mre <- country_speeches %>% select(1,2, 4) %>% filter(position == "MRE") %>% select(1, 3)
 
-# ggsave(filename = "freq_disc_country.png", plot = country_speeches_plot, dpi = 500, width = 9, height = 11) 
+colnames(country_speeches_mre) <- c("region", "values")
+maps <- map_data("world")
+maps <- filter(maps, region != "Antarctica")
+
+country_speeches_mre_df <- left_join(maps, country_speeches_mre)
+
+country_speeches_mre_df <- mutate(country_speeches_mre_df, values = ifelse(is.na(values), 0, values))
+
+country_speeches_mre_df$brk <- cut(country_speeches_mre_df$values, 
+                  breaks = c(-1, 0, 15, 50, 585), 
+                  labels = c("0", "1 - 14", "15 - 49", "50 - 585"))
+
+
+country_speeches_mre_plot <- ggplot(country_speeches_mre_df, aes(x = long, y = lat, group = group, fill = brk)) +
+  geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
+  scale_fill_brewer(palette="PuBu") +
+  theme(legend.text = element_text(size = rel(1)), 
+        legend.title = element_blank(), 
+        legend.position= c(0.09, 0.15), 
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
+  labs(title = "Frequência de Discursos dos Chanceleres por País")
+
+# ggsave(filename = "map_mre.png", plot = country_speeches_mre_plot, dpi = 500, width = 9.5, height = 5) 
+
+## Now, the maps for the Presidents
+
+country_speeches_pres <- country_speeches %>% select(1,2, 4) %>% filter(position == "PRES") %>% select(1, 3)
+
+colnames(country_speeches_pres) <- c("region", "values")
+maps <- map_data("world")
+maps <- filter(maps, region != "Antarctica")
+
+country_speeches_pres_df <- left_join(maps, country_speeches_pres)
+
+country_speeches_pres_df <- mutate(country_speeches_pres_df, values = ifelse(is.na(values), 0, values))
+
+country_speeches_pres_df$brk <- cut(country_speeches_pres_df$values, 
+                                   breaks = c(-1, 0, 15, 50, 432), 
+                                   labels = c("0", "1 - 14", "15 - 432", "50 - 585"))
+
+
+country_speeches_pres_plot <- ggplot(country_speeches_pres_df, aes(x = long, y = lat, group = group, fill = brk)) +
+  geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
+  scale_fill_brewer(palette="PuBu") +
+  theme(legend.text = element_text(size = rel(1)), 
+        legend.title = element_blank(), 
+        legend.position= c(0.09, 0.15), 
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
+  labs(title = "Frequência de Discursos dos Chanceleres por País")
+
+## ggsave(filename = "map_pres.png", plot = country_speeches_pres_plot, dpi = 500, width = 9.5, height = 5) 
 
 
 # Speeches per Dyad -------------------------------------------------------
