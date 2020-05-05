@@ -777,7 +777,14 @@ specific_terms$document <- str_to_upper(specific_terms$document)
 specific_terms$term <- str_to_upper(specific_terms$term)
 
 specific_terms <- specific_terms %>% group_by(document) %>% top_n(15) %>% ungroup() 
-ggplot(specific_terms, aes(x=reorder_within(term, count, document), y=count, fill = document)) + geom_col(show.legend = FALSE) + facet_wrap(~document, scales = "free", nrow = 3) + coord_flip() + scale_x_reordered()
+
+specific_terms_plot <- ggplot(specific_terms, aes(x=reorder_within(term, count, document), y=count, fill = document)) + geom_col(show.legend = FALSE, fill = "white", colour = "black") + facet_wrap(~document, scales = "free", nrow = 5) + coord_flip() + scale_x_reordered() + thesis_theme() + 
+  theme(axis.title = element_blank(), 
+        panel.grid.minor = element_blank(), 
+        panel.grid.major.x = element_blank(),
+        strip.text = element_text(size = rel(1.3)))
+
+# ggsave("speakers_tfidf.png", specific_terms_plot, dpi = 900, width = 10, height = 15.5)
 
 ```
 
