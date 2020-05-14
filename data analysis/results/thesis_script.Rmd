@@ -31,6 +31,7 @@ library(lubridate)
 library(patchwork)
 library(tidytext)
 library(gwordtree)
+library(here)
 
 ```
 
@@ -51,8 +52,8 @@ Data source
 
 ```{r data_source}
 
-corpus_data_source <- readtext(file = "./corpus/resenha de PEB/corpus_1995_2019/*.txt", docvarsfrom = "filenames", docvarnames = c("position", "speaker", "date", "language", "city", "country", "continent", "type")) 
-
+corpus_data_source <- readtext(file = here::here("corpus", "resenha de PEB", "corpus_1995_2019", "*.txt"), docvarsfrom = "filenames", docvarnames = c("position", "speaker", "date", "language", "city", "country", "continent", "type")) 
+  
 ```
 
 Adding and Fixing Variables
@@ -802,15 +803,15 @@ agents_similarity <- dfm(main_tokens, tolower = TRUE,
                                      stopwords(language = "french"),
                                      stopwords(language = "italian")))
 
-agents_similarity <- dfm_group(agents_similarity, groups = "speaker_reshaped") 
+agents_similarity <- dfm_trim(agents_similarity, min_termfreq = 1, min_docfreq = 5)
 
-agents_similarity <- textstat_simil(agents_similarity, margin = "documents", method = "correlation")
+agents_similarity <- dfm_group(agents_similarity, groups = "speaker_reshaped") %>% dfm_weight(scheme = "prop")
+
+agents_similarity <- textstat_dist(agents_similarity, margin = "documents", method = "euclidean")
 
 agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust() 
-plot(agents_similarity_dend)
+plot(agents_similarity_dend, main = "Distância Euclidiana em Documentos Normalizados", ylab = "", xlab = "", axes = FALSE, sub = "")
 
-agents_similarity_matrix <- as.matrix(agents_similarity)
- 
 ```
 
 
