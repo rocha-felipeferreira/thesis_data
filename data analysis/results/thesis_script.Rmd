@@ -263,6 +263,43 @@ main_tokens <- tokens_compound(main_tokens, pattern = phrase("gazeta mercantil")
 
 main_tokens <- tokens_compound(main_tokens, pattern = phrase("correio braziliense"), valuetype = "fixed", case_insensitive = TRUE)
 
+main_tokens <- tokens_replace(main_tokens, pattern = "fnanceira", replacement = "financeira", valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "fnanciamento", replacement = "financiamento", valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "id*ia", replacement = "ideia", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("jedrzzej bielecki"), case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("s*rgio danese"),valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("correio bra*iliense"),valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("jeffrey jowell"),valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("
+gilberto freyre"),valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "f*z*ram", replacement = "fizeram", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "fzemos", replacement = "fizemos", valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "fscal", replacement = "fiscal", valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "primeiroministro", replacement = "primeiro ministro", valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("george* chi*oti"),valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("pascal lamy"),valuetype = "fixed", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("ru* barbosa"),valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("joaqu*m nabuco"),valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "*nica", replacement = "única", valuetype = "glob", case_insensitive = TRUE)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase("nicanor duarte"),valuetype = "fixed", case_insensitive = TRUE)
+
 ```
 
 ## 5 Executive: The 1st Dimension
@@ -778,6 +815,8 @@ specific_terms$document <- str_to_upper(specific_terms$document)
 specific_terms$term <- str_to_upper(specific_terms$term)
 
 specific_terms <- specific_terms %>% group_by(document) %>% top_n(15) %>% ungroup() 
+
+specific_terms$document <- factor(specific_terms$document, ordered = TRUE, levels = c("FHC I", "FHC II", "LAMPREIA", "LAFER", "LULA I", "AMORIM I", "LULA II", "AMORIM II", "DILMA", "PATRIOTA", "FIGUEIREDO", "VIEIRA", "SERRA", "NUNES", "ARAÚJO"))
 
 specific_terms_plot <- ggplot(specific_terms, aes(x=reorder_within(term, count, document), y=count, fill = document)) + geom_col(show.legend = FALSE, fill = "white", colour = "black") + facet_wrap(~document, scales = "free", nrow = 5) + coord_flip() + scale_x_reordered() + thesis_theme() + 
   theme(axis.title = element_blank(), 
