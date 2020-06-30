@@ -219,19 +219,22 @@ country_speeches <- country_speeches %>% group_by_all() %>% count() %>% ungroup(
 
 ## Here, I saved the csv, translated the countries' names, and now I am importing again so I can use it. 
 
-country_speeches <- read_csv("data analysis/methodology/country_speeches.csv")
+country_speeches <- read_csv("data analysis/methodology/country_speeches.csv") 
 
+country_speeches$country <- str_squish(country_speeches$country)
+country_speeches$country <- str_to_lower(country_speeches$country)
+  
 ## Map showing Chancellors' speeches
 
-country_speeches_mre <- country_speeches %>% select(1,2, 4) %>% filter(position == "MRE") %>% select(1, 3)
+country_speeches_mre <- country_speeches %>% select(1,2, 4) %>% filter(position == "MRE") %>% select(1, 3) %>% group_by(country) %>% summarise(n = sum(n))
 
-colnames(country_speeches_mre) <- c("region", "values")
 maps <- map_data("world")
 maps <- filter(maps, region != "Antarctica")
+maps$region <- str_to_lower(maps$region)
 
-country_speeches_mre_df <- left_join(maps, country_speeches_mre)
+country_speeches_mre_df <- left_join(maps, country_speeches_mre, by = c("region" = "country"))
 
-country_speeches_mre_df <- mutate(country_speeches_mre_df, values = ifelse(is.na(values), 0, values))
+country_speeches_mre_df <- mutate(country_speeches_mre_df, values = ifelse(is.na(n), 0, n))
 
 country_speeches_mre_df$brk <- cut(country_speeches_mre_df$values, 
                   breaks = c(-1, 0, 15, 50, 585), 
@@ -240,7 +243,7 @@ country_speeches_mre_df$brk <- cut(country_speeches_mre_df$values,
 
 country_speeches_mre_plot <- ggplot(country_speeches_mre_df, aes(x = long, y = lat, group = group, fill = brk)) +
   geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
-  scale_fill_brewer(palette="PuBu") +
+  scale_fill_manual(values = c("white", "gray80", "gray40", "black")) +
   theme(legend.text = element_text(size = rel(1)), 
         legend.title = element_blank(), 
         legend.position= c(0.09, 0.15), 
@@ -251,15 +254,11 @@ country_speeches_mre_plot <- ggplot(country_speeches_mre_df, aes(x = long, y = l
 
 ## Now, the maps for the Presidents
 
-country_speeches_pres <- country_speeches %>% select(1,2, 4) %>% filter(position == "PRES") %>% select(1, 3)
+country_speeches_pres <- country_speeches %>% select(1,2, 4) %>% filter(position == "PRES") %>% select(1, 3) %>% group_by(country) %>% summarise(n = sum(n))
 
-colnames(country_speeches_pres) <- c("region", "values")
-maps <- map_data("world")
-maps <- filter(maps, region != "Antarctica")
+country_speeches_pres_df <- left_join(maps, country_speeches_pres, by = c("region" = "country"))
 
-country_speeches_pres_df <- left_join(maps, country_speeches_pres)
-
-country_speeches_pres_df <- mutate(country_speeches_pres_df, values = ifelse(is.na(values), 0, values))
+country_speeches_pres_df <- mutate(country_speeches_pres_df, values = ifelse(is.na(n), 0, n))
 
 country_speeches_pres_df$brk <- cut(country_speeches_pres_df$values, 
                                    breaks = c(-1, 0, 15, 50, 432), 
@@ -268,7 +267,7 @@ country_speeches_pres_df$brk <- cut(country_speeches_pres_df$values,
 
 country_speeches_pres_plot <- ggplot(country_speeches_pres_df, aes(x = long, y = lat, group = group, fill = brk)) +
   geom_polygon(colour = "black", size = .2, alpha = .9) + theme_void() +
-  scale_fill_brewer(palette="PuBu") +
+  scale_fill_manual(values = c("white", "gray80", "gray40", "black")) +
   theme(legend.text = element_text(size = rel(1)), 
         legend.title = element_blank(), 
         legend.position= c(0.09, 0.15), 
