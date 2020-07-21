@@ -153,7 +153,7 @@ corpus_data_source$speaker_reshaped[corpus_data_source$doc_id == "MRE_C.Amorim_0
 
 ```{r stopwords}
 
-custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "ter", "fazer", "outro", "outros", "outra", "outras", "assim", "vou", "tem", "têm", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "diz", "digamos", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "queremos", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "disse", "ver", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "queria", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "conversar", "conversava", "dá", "quer", "sabe", "existe", "existem", "há", "haver", "havia", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones")
+custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo")
 
 ```
 
@@ -171,49 +171,23 @@ Tokens:
 
 ```{r tokens}
 
+nomes_compostos <- c("instituto rio branco", "hugo chávez", "evo morales", "folha de são paulo", "reino unido", "universidade de oxford", "lyse doucet", "san tiago dantas", "samuel pinheiro guimarães", "colin powell", "bom dia", "nicanor duarte", "relações internacionais", "relações exteriores", "condoleeza rice", "honoris causa", "bertha lutz", "cristovam buarque", "ricardo ferraço", "mylton severiano", "alan garcía", "osmar chohf*", "carlos setti", "lehman brothers", "gazeta mercantil", "correio bra*iliense", "b*ris casoy", "lu** fara* monteiro", "jedrzzej bielecki", "s*rgio danese", "jeffrey jowell", "gilberto freyre", "george* chi*oti", "pascal lamy", "ru* barbosa", "joaqu*m nabuco", "paulo freire", "cristina kirchner", "antonio palocci", "união europ*ia", "nações unidas", "direitos humanos", "américa latina", "américa do sul")
+
 main_tokens <- tokens(main_corpus)
+
+main_tokens <- tokens_compound(main_tokens, pattern = phrase(nomes_compostos), case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(x = main_tokens, pattern = "companheir*", replacement = "companheir@", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "europ*ia", replacement = "europeia", valuetype = "glob", case_insensitive = TRUE)
-
 main_tokens <- tokens_replace(main_tokens, pattern = "assembl*ia", replacement = "assembleia", valuetype = "glob", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("instituto rio branco"), valuetype = "fixed", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "japones*", replacement = "japones*", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "chines*", replacement = "chines*", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("hugo chávez"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("evo morales"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("folha de são paulo"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("reino unido"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("lyse doucet"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("san tiago dantas"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("lu** fara* monteiro"), valuetype = "glob", case_insensitive = TRUE)
-
-main_tokens <- tokens_replace(main_tokens, pattern = "luís_fara_monteiro", replacement = "luiz_fara_monteiro", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("samuel pinheiro guimarães"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("b*ris casoy"), valuetype = "glob", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("colin powell"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("bom dia"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("quer dizer"), valuetype = "fixed", case_insensitive = TRUE)
-
 main_tokens <- tokens_replace(x = main_tokens, pattern = "menin*", replacement = "menin@", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(x = main_tokens, pattern = "acredita*", replacement = "acreditar*", valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(x = main_tokens, pattern = "acredit*", replacement = "acreditar*", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(x = main_tokens, pattern = "poluent*", replacement = "poluente*", valuetype = "glob", case_insensitive = TRUE)
 
@@ -221,84 +195,69 @@ main_tokens <- tokens_replace(main_tokens, pattern = "senhor*", replacement = "s
 
 main_tokens <- tokens_replace(main_tokens, pattern = "ministr*", replacement = "ministr*", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("relações internacionais"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("relações exteriores"), valuetype = "fixed", case_insensitive = TRUE)
-
 main_tokens <- tokens_replace(main_tokens, pattern = "empres*ri*", replacement = "empresári*", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "plant*", replacement = "plant*", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "país*", replacement = "país*", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("condoleezza rice"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("honoris causa"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("bertha lutz"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("cristovam buarque"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("ricardo ferraço"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("mylton severiano"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("alan garcía"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("osmar chohf"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("carlos setti"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("nações unidas"), case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("união europeia"), case_insensitive = TRUE)
-
 main_tokens <- tokens_replace(main_tokens, pattern = "conflit*", replacement = "conflit@", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "amig*", replacement = "amig@", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("lehman brothers"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("gazeta mercantil"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("correio braziliense"), valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_replace(main_tokens, pattern = "fnanceira", replacement = "financeira", valuetype = "fixed", case_insensitive = TRUE)
-
-main_tokens <- tokens_replace(main_tokens, pattern = "fnanciamento", replacement = "financiamento", valuetype = "fixed", case_insensitive = TRUE)
-
 main_tokens <- tokens_replace(main_tokens, pattern = "id*ia", replacement = "ideia", valuetype = "glob", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("jedrzzej bielecki"), case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "quer*", replacement = "querer*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("s*rgio danese"),valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "pod*", replacement = "poder*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("correio bra*iliense"),valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "deve*", replacement = "dever*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("jeffrey jowell"),valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "gost*", replacement = "gostar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("
-gilberto freyre"),valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "diz*", replacement = "dizer*", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "f*z*ram", replacement = "fizeram", valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "diss*", replacement = "dizer*", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "fzemos", replacement = "fizemos", valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "faz*", replacement = "fazer*", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "fscal", replacement = "fiscal", valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "transform*", replacement = "transformar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "primeiroministro", replacement = "primeiro ministro", valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "entend*", replacement = "entender*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("george* chi*oti"),valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "levant*", replacement = "levantar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("pascal lamy"),valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "arrum*", replacement = "arrumar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("ru* barbosa"),valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "acontec*", replacement = "acontecer*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("joaqu*m nabuco"),valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "destac*", replacement = "destacar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_replace(main_tokens, pattern = "*nica", replacement = "única", valuetype = "glob", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "convers*", replacement = "conversar*", case_insensitive = TRUE)
 
-main_tokens <- tokens_compound(main_tokens, pattern = phrase("nicanor duarte"),valuetype = "fixed", case_insensitive = TRUE)
+main_tokens <- tokens_replace(main_tokens, pattern = "sabe*", replacement = "saber*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "exist*", replacement = "existir*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "ergu*", replacement = "erguer*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "prova*", replacement = "provar*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "aprend*", replacement = "aprender*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "compra*", replacement = "comprar*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "constru*", replacement = "construir*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "setor*", replacement = "setor*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "problem*", replacement = "problema*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "membro*", replacement = "membro*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "pobre*", replacement = "pobre*", case_insensitive = TRUE)
+
+main_tokens <- tokens_replace(main_tokens, pattern = "socia*", replacement = "social*", case_insensitive = TRUE)
 
 ```
 
@@ -308,7 +267,7 @@ main_tokens <- tokens_compound(main_tokens, pattern = phrase("nicanor duarte"),v
 
 ```{r proper_nouns}
 
-proper_nouns <- main_tokens %>% 
+proper_nouns <- main_corpus %>% tokens() %>%  
   tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
@@ -346,7 +305,7 @@ proper_nouns_plot <- proper_nouns_bigram %>% top_n(50) %>%
 
 ```{r keyness_realm}
 
-realm_keyness <- main_tokens %>%
+realm_keyness <- main_tokens %>% 
   tokens_tolower() %>% 
   tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
   tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
@@ -475,7 +434,7 @@ cargo_tfidf_plot <- feat_position %>% group_by(document) %>% top_n(50) %>% ungro
 
 ```{r keyness_position}
 
-position_keyness <- main_tokens %>%
+position_keyness <- main_tokens %>% 
   tokens_tolower() %>% 
   tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
   tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
