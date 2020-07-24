@@ -34,6 +34,7 @@ library(gwordtree)
 library(here)
 library(countrycode)
 library(maps)
+library(ggthemes)
 
 ```
 
@@ -783,6 +784,96 @@ wordtree_plot <- ggplot(wordtree_df, aes(x = sentence, y = valores)) +
 
 ```
 
+### 6.6 Mapas
+
+```{r mapa menções}
+
+countries_dict <- dictionary(file = here("data analysis", "results", "paises.yml"), format = "YAML")
+
+## Presidentes
+
+pres_countries <- main_corpus %>% tokens() %>% tokens_subset(position == "PRES") %>% dfm(tolower = TRUE, dictionary = countries_dict) %>% convert(to = "data.frame")
+
+pres_countries$doc_id <- NULL
+
+pres_countries <- gather(pres_countries) %>% group_by(key) %>% summarise(value = sum(value))
+
+pres_countries$full_name <- countrycode(sourcevar = pres_countries$key, origin = "iso3c", destination = "country.name", nomatch = NULL)
+
+mapa_pres <- map_data(map = "world")
+mapa_pres <- filter(mapa_pres, region  != "Antarctica")
+
+setdiff(mapa_pres$region, pres_countries$full_name)
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "United States", "USA")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "United Kingdom", "UK")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Vatican City", "Vatican")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "São Tomé & Príncipe", "Sao Tome and Principe")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Palestinian Territories", "Palestine")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Antigua & Barbuda", "Antigua")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
+
+mapa_pres <- left_join(mapa_pres, pres_countries, by = c("region" = "full_name"))
+
+mapa_pres[is.na.data.frame(mapa_pres)] <- 0
+
+mapa_pres$valor_cat <- cut(mapa_pres$value, breaks = c(0, 10, 50, 100, 200, 400, 600, 800, 10614), labels = c("0-10", "10-50", "50-100", "100-200", "200-400", "400-600", "600-800", "1000 ou mais"), include.lowest = TRUE)
+
+ggplot(data = mapa_pres, aes(x = long, y = lat, group = group, fill = valor_cat)) +
+  geom_polygon(colour = "black") + 
+  coord_cartesian() + theme_void() +
+  labs(fill = "Número de Citações") + 
+  scale_fill_viridis_d(option = "D", direction = 1, alpha = .8)
+
+## MRE
+
+mre_countries <- main_corpus %>% tokens() %>% tokens_subset(position == "MRE") %>% dfm(tolower = TRUE, dictionary = countries_dict) %>% convert(to = "data.frame")
+
+mre_countries$doc_id <- NULL
+
+mre_countries <- gather(mre_countries) %>% group_by(key) %>% summarise(value = sum(value))
+
+mre_countries$full_name <- countrycode(sourcevar = mre_countries$key, origin = "iso3c", destination = "country.name", nomatch = NULL)
+
+mapa_mre <- map_data(map = "world")
+mapa_mre <- filter(mapa_mre, region  != "Antarctica")
+
+setdiff(mapa_mre$region, mre_countries$full_name)
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "United States", "USA")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "United Kingdom", "UK")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Vatican City", "Vatican")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "São Tomé & Príncipe", "Sao Tome and Principe")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Palestinian Territories", "Palestine")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Antigua & Barbuda", "Antigua")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
+
+mapa_mre<- left_join(mapa_mre, mre_countries, by = c("region" = "full_name"))
+
+mapa_mre[is.na.data.frame(mapa_mre)] <- 0
+
+mapa_mre$valor_cat <- cut(mapa_mre$value, breaks = c(0, 10, 50, 100, 200, 400, 600, 800, 10614), labels = c("0-10", "10-50", "50-100", "100-200", "200-400", "400-600", "600-800", "1000 ou mais"), include.lowest = TRUE)
+
+ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, fill = valor_cat)) +
+  geom_polygon(colour = "black") + 
+  coord_cartesian() + theme_void() +
+  labs(fill = "Número de Citações") + 
+  scale_fill_viridis_d(option = "D", direction = 1, alpha = .8)
+
+```
+
 
 ## 7 Agents: The 3rd Dimension
 
@@ -847,64 +938,3 @@ agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust()
 plot(agents_similarity_dend, main = "Distância Euclidiana em Documentos Normalizados", ylab = "", xlab = "", axes = FALSE, sub = "")
 
 ```
-
-
-
-### Testando algo
-
-```{r mapa menções}
-
-countries_dict <- dictionary(file = here("data analysis", "results", "paises.yml"), format = "YAML")
-
-## Presidentes
-
-pres_countries <- main_corpus %>% tokens() %>% tokens_subset(position == "PRES") %>% dfm(tolower = TRUE, dictionary = countries_dict) %>% convert(to = "data.frame")
-
-pres_countries$doc_id <- NULL
-
-pres_countries <- gather(pres_countries) %>% group_by(key) %>% summarise(value = sum(value))
-
-pres_countries$full_name <- countrycode(sourcevar = pres_countries$key, origin = "iso3c", destination = "country.name", nomatch = NULL)
-
-```
-
-
-## Parei aqui
-mapas_antes_gf <- map_data(map = "world")
-mapas_antes_gf <- filter(mapas_antes_gf, region != "Antarctica")
-
-setdiff(mencoes_paises_antes_gf$full_name, mapas_antes_gf$region)
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "United States", "USA")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "United Kingdom", "UK")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "Vatican City", "Vatican")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "São Tomé & Príncipe", "Sao Tome and Principe")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "Palestinian Territories", "Palestine")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "Antigua & Barbuda", "Antigua")
-
-mencoes_paises_antes_gf$full_name <- str_replace_all(mencoes_paises_antes_gf$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
-
-setdiff(mencoes_paises_antes_gf$full_name, mapas_antes_gf$region)
-
-mapas_antes_gf <- left_join(mapas_antes_gf, mencoes_paises_antes_gf, by = c("region" = "full_name"))
-
-mapas_antes_gf[is.na(mapas_antes_gf)] <- 0
-
-mapas_antes_gf$valor_ordenado <- cut(mapas_antes_gf$value, breaks = c(0, 1, 50, 100, 225, 589), labels = c("0 menções","1-50 menções", "50 a 100 menções", "100 a 225 menções", "225 a 589"), include.lowest = TRUE)
-
-ggplot(data = mapas_antes_gf, aes(x = long, y = lat, group = group, fill = valor_ordenado)) +
-  geom_polygon(colour = "black") + 
-  scale_fill_manual(values = brewer.pal(5, "BuPu")[1:5]) +
-  coord_cartesian() + theme_void() +
-  labs(fill = "")
-
-
-
-
-
-
