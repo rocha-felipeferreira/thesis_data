@@ -35,6 +35,8 @@ library(here)
 library(countrycode)
 library(maps)
 library(ggthemes)
+library(igraph)
+library(ggraph)
 
 ```
 
@@ -156,7 +158,7 @@ corpus_data_source$speaker_reshaped[corpus_data_source$doc_id == "MRE_C.Amorim_0
 
 ```{r stopwords}
 
-custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há", "haver", "havia", "aconteçam", "pacífca", "lembrar-se")
+custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há", "haver", "havia", "aconteçam", "pacífca", "lembrar-se", "senhor", "senhora", "senhores", "senhoras", "excelente", "excelentíssimo", "excelentíssima", "excelentíssimos", "excelentíssimas")
 
 ```
 
@@ -174,7 +176,7 @@ Tokens:
 
 ```{r tokens}
 
-nomes_compostos <- c("instituto rio branco", "hugo chávez", "evo morales", "folha de são paulo", "reino unido", "universidade de oxford", "lyse doucet", "san tiago dantas", "samuel pinheiro guimarães", "colin powell", "bom dia", "nicanor duarte", "relações internacionais", "relações exteriores", "condoleeza rice", "honoris causa", "bertha lutz", "cristovam buarque", "ricardo ferraço", "mylton severiano", "alan garcía", "osmar chohf*", "carlos setti", "lehman brothers", "gazeta mercantil", "correio bra*iliense", "b*ris casoy", "lu** fara* monteiro", "jedrzzej bielecki", "s*rgio danese", "jeffrey jowell", "gilberto freyre", "george* chi*oti", "pascal lamy", "ru* barbosa", "joaqu*m nabuco", "paulo freire", "cristina kirchner", "antonio palocci", "união europ*ia", "nações unidas", "direitos humanos", "américa latina", "américa do sul")
+nomes_compostos <- c("instituto rio branco", "hugo chávez", "evo morales", "folha de são paulo", "reino unido", "universidade de oxford", "lyse doucet", "san tiago dantas", "samuel pinheiro guimarães", "colin powell", "bom dia", "nicanor duarte", "relações internacionais", "relações exteriores", "condoleeza rice", "honoris causa", "bertha lutz", "cristovam buarque", "ricardo ferraço", "mylton severiano", "alan garcía", "osmar chohf*", "carlos setti", "lehman brothers", "gazeta mercantil", "correio bra*iliense", "b*ris casoy", "lu** fara* monteiro", "jedrzzej bielecki", "s*rgio danese", "jeffrey jowell", "gilberto freyre", "george* chi*oti", "pascal lamy", "ru* barbosa", "joaqu*m nabuco", "paulo freire", "cristina kirchner", "antonio palocci", "união europ*ia", "nações unidas", "direitos humanos", "américa latina", "américa do sul", "presidência pro tempore", "meio ambiente")
 
 main_tokens <- tokens(main_corpus)
 
@@ -315,19 +317,24 @@ proper_nouns <- tokens_select(proper_nouns,
                               case_insensitive = FALSE, 
                               padding = TRUE)
 
-proper_nouns_bigram <- textstat_collocations(proper_nouns, min_count = 10, tolower = FALSE, size = 2) %>% as_tibble() %>% select(collocation, count)
+proper_nouns_ngram <- textstat_collocations(proper_nouns, min_count = 10, tolower = FALSE, size = 2) %>% as_tibble() %>% select(collocation, count)
 
-proper_nouns_bigram$collocation <- str_to_title(proper_nouns_bigram$collocation)
-proper_nouns_bigram <- proper_nouns_bigram %>% group_by(collocation) %>% 
+proper_nouns_ngram$collocation <- str_to_title(proper_nouns_ngram$collocation)
+
+proper_nouns_ngram <- proper_nouns_ngram %>% group_by(collocation) %>% 
   summarise(count = sum(count))
 
-proper_nouns_plot <- proper_nouns_bigram %>% top_n(50) %>% 
-  ggplot(aes(x = collocation, y = count)) + 
-  geom_segment(aes(x = reorder(collocation, count), y = count, xend = collocation, yend = 0)) + geom_point(size = 2.3) +
-  thesis_theme() +
-  theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_blank(), 
-        panel.grid.minor = element_blank(), panel.grid.major.x = element_blank()) + coord_flip() + scale_y_continuous(expand = c(0,0), limits = c(0, 1600), breaks = c(0, 500, 1000, 1500)) +
-  ylab("Frequência") + xlab("Collocation\n(Bigramas)")
+proper_nouns_ngram <- separate(data = proper_nouns_ngram, col = collocation, into = c("p1", "p2"), sep = " ")
+
+proper_nouns_ngram_plot <- proper_nouns_ngram %>%
+  filter(count > 40) %>% 
+  graph_from_data_frame()
+
+set.seed(202438)
+seta <- grid::arrow(type = "closed", length = unit(.08, "inches"))
+
+ggraph(proper_nouns_ngram_plot, layout = "fr") + geom_edge_link(aes(edge_alpha = count), show.legend = FALSE, arrow = seta, end_cap = circle(.03, "inches")) +
+  geom_node_point(size = 3, colour = "lightblue") + geom_node_text(aes(label = name), vjust = 1, hjust = 1) + theme_void()
 
 # ggsave("collocation_exec_bigrama.png", proper_nouns_plot, height = 10, width = 7, dpi = 600)
 
@@ -819,6 +826,8 @@ pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = 
 
 pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
 
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Myanmar (Burma)", "Myanmar")
+
 mapa_pres <- left_join(mapa_pres, pres_countries, by = c("region" = "full_name"))
 
 mapa_pres[is.na.data.frame(mapa_pres)] <- 0
@@ -859,6 +868,8 @@ mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "P
 mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Antigua & Barbuda", "Antigua")
 
 mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Myanmar (Burma)", "Myanmar")
 
 mapa_mre<- left_join(mapa_mre, mre_countries, by = c("region" = "full_name"))
 
