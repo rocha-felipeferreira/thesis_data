@@ -506,14 +506,14 @@ speakers_keyness_plot <- speakers_keyness_plot + thesis_theme() +
 
 ```
 
-### 6.3 Proper nouns for Position (PAREI AQUI)
+### 6.3 Proper nouns for Position
 
 ```{r proper_nouns_position}
 
 #Presidents
 
-proper_nouns_presid <- tokens_subset(main_tokens, position == "PRES")
-
+proper_nouns_presid <- main_corpus %>% tokens() %>% tokens_subset(position == "PRES")
+  
 ndoc(proper_nouns_presid)
 
 proper_nouns_presid <- proper_nouns_presid %>% 
@@ -541,7 +541,8 @@ proper_nouns_presid_trigram$speaker <- "PRES" %>% as_factor()
 
 #Chancellors
 
-proper_nouns_mre <- tokens_subset(main_tokens, position == "MRE")
+proper_nouns_mre <- main_corpus %>% tokens() %>% tokens_subset(position == "MRE")
+
 ndoc(proper_nouns_mre)
 
 proper_nouns_mre <- proper_nouns_mre %>% 
@@ -598,6 +599,7 @@ Chancellors:
 ```{r main-feat-cor-mre}
 
 main_feat_mre_cor <- tokens_subset(main_tokens, position == "MRE")
+
 ndoc(main_feat_mre_cor)
 
 main_feat_mre_cor <- dfm(main_feat_mre_cor, tolower = TRUE, remove_punct = TRUE,
@@ -772,7 +774,6 @@ brazil_can_pres_kwic$merged <- str_squish(brazil_can_pres_kwic$merged)
 ```
 
 ### 6.5 Wordtrees: Graph
-
 
 ```{r wordtrees_graph}
 
