@@ -168,7 +168,9 @@ Corpus:
 
 ```{r corpus}
 
+ndoc(main_corpus)
 main_corpus <- corpus_data_source %>% drop_na() %>% corpus()
+ndoc(main_corpus)
 
 ```
 
@@ -661,21 +663,16 @@ joined_network
 
 ```
 
+### KWIC 
 
-### 6.4 Wordtrees 
+```{r kwic_brazil_defends}
 
-```{r brazil_defends}
-
-#Chanceleres
+#MRE
 brazil_defends_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
 
 brazil_defends_mre_kwic <- kwic(brazil_defends_mre, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_defends_mre_kwic$merged <- paste(brazil_defends_mre_kwic$pre, brazil_defends_mre_kwic$keyword, brazil_defends_mre_kwic$post)
-
-brazil_defends_mre_kwic$merged <- str_squish(brazil_defends_mre_kwic$merged)
-
-gwordtree(word = brazil_defends_mre_kwic$merged, firstword = "brasil", width = 1200)
+brazil_defends_mre_kwic$id <- "MRE"
 
 #Presidentes
 
@@ -683,41 +680,37 @@ brazil_defends_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus
 
 brazil_defends_pres_kwic <- kwic(brazil_defends_pres, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_defends_pres_kwic$merged <- paste(brazil_defends_pres_kwic$pre, brazil_defends_pres_kwic$keyword, brazil_defends_pres_kwic$post)
+brazil_defends_pres_kwic$id <- "PRES"
 
-brazil_defends_pres_kwic$merged <- str_squish(brazil_defends_pres_kwic$merged)
+# Merged
 
-gwordtree(word = brazil_defends_pres_kwic$merged, firstword = "brasil", width = 1200)
+brazil_defends_kwic <- rbind(brazil_defends_mre_kwic, brazil_defends_pres_kwic)
 
 ```
 
 
 ```{r brazil_must/should}
 
-#Chanceleres
+#MRE
+
 brazil_mustshould_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
 
 brazil_mustshould_mre_kwic <- kwic(brazil_mustshould_mre, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_mustshould_mre_kwic$merged <- paste(brazil_mustshould_mre_kwic$pre, brazil_mustshould_mre_kwic$keyword, brazil_mustshould_mre_kwic$post)
-
-brazil_mustshould_mre_kwic$merged <- str_squish(brazil_mustshould_mre_kwic$merged)
-
-gwordtree(word = brazil_mustshould_mre_kwic$merged, firstword = "brasil", width = 1200)
-
+brazil_mustshould_mre_kwic$id <- "MRE"
 
 #Presidentes
-
 
 brazil_mustshould_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
 
 brazil_mustshould_pres_kwic <- kwic(brazil_mustshould_pres, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_mustshould_pres_kwic$merged <- paste(brazil_mustshould_pres_kwic$pre, brazil_mustshould_pres_kwic$keyword, brazil_mustshould_pres_kwic$post)
+brazil_mustshould_pres_kwic$id <- "PRES"
 
-brazil_mustshould_pres_kwic$merged <- str_squish(brazil_mustshould_pres_kwic$merged)
+# Merged
 
-gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "deve", width = 1200)
+brazil_mustshould_kwic <- rbind(brazil_mustshould_mre_kwic, brazil_mustshould_pres_kwic)
+
 
 ```
 
@@ -729,11 +722,7 @@ brazil_needs_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_res
 
 brazil_needs_mre_kwic <- kwic(brazil_needs_mre, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_needs_mre_kwic$merged <- paste(brazil_needs_mre_kwic$pre, brazil_needs_mre_kwic$keyword, brazil_needs_mre_kwic$post)
-
-brazil_needs_mre_kwic$merged <- str_squish(brazil_needs_mre_kwic$merged)
-
-gwordtree(word = brazil_needs_mre_kwic$merged, firstword = "brasil", width = 1000)
+brazil_needs_mre_kwic$id <- "MRE"
 
 #Presidentes
 
@@ -741,15 +730,14 @@ brazil_needs_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_r
 
 brazil_needs_pres_kwic <- kwic(brazil_needs_pres, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_needs_pres_kwic$merged <- paste(brazil_needs_pres_kwic$pre, brazil_needs_pres_kwic$keyword, brazil_needs_pres_kwic$post)
+brazil_needs_pres_kwic$id <- "PRES"
 
-brazil_needs_pres_kwic$merged <- str_squish(brazil_needs_pres_kwic$merged)
+# Merged
 
-gwordtree(word = brazil_needs_pres_kwic$merged, firstword = "brasil", width = 1000)
+brazil_needs_kwic <- rbind(brazil_needs_mre_kwic, brazil_needs_pres_kwic)
 
 ```
 
-I just need the following values for the comparative graph. 
 
 ```{r brazil_can}
 
@@ -758,32 +746,32 @@ brazil_can_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_resha
 
 brazil_can_mre_kwic <- kwic(brazil_can_mre, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_can_mre_kwic$merged <- paste(brazil_can_mre_kwic$pre, brazil_can_mre_kwic$keyword, brazil_can_mre_kwic$post)
-
-brazil_can_mre_kwic$merged <- str_squish(brazil_can_mre_kwic$merged)
+brazil_can_mre_kwic$id <- "MRE"
 
 #Presidentes
 brazil_can_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
 
 brazil_can_pres_kwic <- kwic(brazil_can_pres, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_can_pres_kwic$merged <- paste(brazil_can_pres_kwic$pre, brazil_can_pres_kwic$keyword, brazil_can_pres_kwic$post)
+brazil_can_pres_kwic$id <- "PRES"
 
-brazil_can_pres_kwic$merged <- str_squish(brazil_can_pres_kwic$merged)
+# Merged
+
+brazil_can_kwic <- rbind(brazil_can_mre_kwic, brazil_can_pres_kwic)
 
 ```
 
-### 6.5 Wordtrees: Graph
+### 6.5 KWIC: Graph
 
-```{r wordtrees_graph}
+```{r kwic_graph}
 
-wordtree_df <- tibble(sentence = c("Necessidade", "Possibilidade", "Defesa", "Deveres"), valores_mre = c(23, 45, 22, 18), valores_pres = c(43, 87, 5, 10))
+kwic_graph_df <- tibble(sentence = c("Necessidade", "Possibilidade", "Defesa", "Deveres"), valores_mre = c(23, 45, 22, 18), valores_pres = c(43, 87, 5, 10))
 
-wordtree_df <- gather(wordtree_df, key = "Agentes", value = "valores", -sentence)
+kwic_graph_df <- gather(kwic_graph_df, key = "Agentes", value = "valores", -sentence)
 
-wordtree_df$sentence <- str_to_upper(wordtree_df$sentence)
+kwic_graph_df$sentence <- str_to_upper(kwic_graph_df$sentence)
 
-wordtree_plot <- ggplot(wordtree_df, aes(x = sentence, y = valores)) +
+kwic_plot <- ggplot(kwic_graph_df, aes(x = sentence, y = valores)) +
   geom_line(aes(group = sentence)) +
   geom_label(aes(label = valores, fill = Agentes), size = 6) + 
   coord_flip() +
