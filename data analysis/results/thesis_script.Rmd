@@ -167,7 +167,6 @@ Corpus:
 
 ```{r corpus}
 
-ndoc(main_corpus)
 main_corpus <- corpus_data_source %>% drop_na() %>% corpus()
 ndoc(main_corpus)
 
@@ -922,17 +921,15 @@ specific_terms_plot <- ggplot(specific_terms, aes(x=reorder_within(term, count, 
 
 ```{r agent_similarity}
 
-agents_similarity <- dfm(main_tokens, tolower = TRUE, 
+agents_similarity_tokens <- main_tokens %>% tokens_subset(language == "pt")
+
+agents_similarity <- dfm(agents_similarity_tokens, tolower = TRUE, 
                           remove_punct = TRUE, remove_numbers = TRUE, 
                           remove_symbols = TRUE, remove_separators = TRUE,
                           remove = c(stopwords(language = "portuguese"), 
-                                     custom_stopwords, 
-                                     stopwords(language = "english"), 
-                                     stopwords(language = "spanish"),
-                                     stopwords(language = "french"),
-                                     stopwords(language = "italian")))
+                                     custom_stopwords)) %>% dfm_wordstem(language = "portuguese")
 
-agents_similarity <- dfm_trim(agents_similarity, min_termfreq = 1, min_docfreq = 5)
+agents_similarity <- dfm_trim(agents_similarity, min_termfreq = 5, min_docfreq = 3)
 
 agents_similarity <- dfm_group(agents_similarity, groups = "speaker_reshaped") %>% dfm_weight(scheme = "prop")
 
