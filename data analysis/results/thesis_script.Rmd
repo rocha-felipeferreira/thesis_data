@@ -438,11 +438,12 @@ textplot_network(main_feat_cor, omit_isolated = FALSE, edge_alpha = .3, edge_col
 
 ## 6 Position: The 2nd Dimension
 
-### 6.1 TFIDF position
+### 6.1 Comparing Main Features of PRES and MRE
 
-```{r tfidf_position}
+```{r compare_main_feat}
 
 feat_position <- tokens_subset(main_tokens, language == "pt")
+
 feat_position <- dfm(feat_position, tolower = TRUE, 
                       remove_numbers = TRUE, remove_punct = TRUE, 
                       remove = c(stopwords(language = "portuguese"),
@@ -452,25 +453,23 @@ feat_position <- dfm(feat_position, tolower = TRUE,
                                  stopwords(language = "italian"), 
                                  custom_stopwords))
 
-feat_position <- dfm_group(feat_position, groups = "position") %>% 
-  dfm_tfidf()
+feat_position <- dfm_group(feat_position, groups = "position")
 
 feat_position <- tidy(feat_position)
-feat_position$term <- ifelse(str_length(feat_position$term) <= 4, str_to_upper(feat_position$term), str_to_title(feat_position$term))
-  
-feat_position$term <- str_replace_all(feat_position$term, "NOW", "Now")
-feat_position$term <- str_replace_all(feat_position$term, "PAYS", "Pays")
 
-cargo_tfidf_plot <- feat_position %>% group_by(document) %>% top_n(50) %>% ungroup() %>%   ggplot(aes(x = reorder_within(term, count, document), y = count, fill = document)) + geom_point(size = 3, show.legend = FALSE, colour = "black", alpha = .8) +
-  facet_wrap(~document, scales = "free", strip.position = "right") + coord_flip() +
-  scale_x_reordered() +
-  xlab("Termos") + ylab("Frequência") + 
-  thesis_theme() +
-  theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.minor = element_blank(), panel.grid.major.y = element_line(colour = "gray75", linetype = "longdash"), panel.grid.major.x = element_blank(), strip.text = element_text(size = rel(1.4), face = "bold"), strip.background = element_rect(colour = "black", fill = "white"))
+feat_position <- mutate(feat_position, count = count/sum(count))
 
-# ggsave("cargo_tfidf_plot.png", cargo_tfidf_plot, height = 9.2, width = 9.2, dpi = 600)
+feat_position <- pivot_wider(feat_position, names_from = document, values_from = count)
+
+ggplot(feat_position, aes(x = PRES, y = MRE)) + 
+  geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
+  geom_text(aes(label = term), check_overlap = TRUE, vjust = 1.5) +
+scale_x_log10(labels = percent_format(accuracy = 0.0001)) +
+  scale_y_log10(labels = percent_format(accuracy = 0.0001)) +
+  geom_abline(color = "red")
 
 ```
+
 
 ### 6.2 Keyness for Position (Bigram)
 
