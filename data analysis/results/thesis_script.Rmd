@@ -167,7 +167,7 @@ Corpus:
 
 ```{r corpus}
 
-main_corpus <- corpus_data_source %>% drop_na() %>% corpus()
+main_corpus <- corpus_data_source %>% drop_na() %>% corpus() #ver isso aqui!
 ndoc(main_corpus)
 
 ```
@@ -802,6 +802,7 @@ mapa_pres <- map_data(map = "world")
 mapa_pres <- filter(mapa_pres, region  != "Antarctica")
 
 setdiff(mapa_pres$region, pres_countries$full_name)
+setdiff(pres_countries$full_name, mapa_pres$region)
 
 pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "United States", "USA")
 
@@ -818,6 +819,29 @@ pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = 
 pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
 
 pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Myanmar (Burma)", "Myanmar")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "ROM", "Romania")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Czechia", "Czech Republic")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "TMP", "Timor-Leste")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Hong Kong SAR China", "China")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Macao SAR China", "China")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Congo - Brazzaville", "Republic of Congo")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Congo - Kinshasa", "Democratic Republic of the Congo")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Côte d’Ivoire", "Ivory Coast")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Eswatini", "Swaziland")
+
+pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = "Réunion", "Reunion")
+
+setdiff(mapa_pres$region, pres_countries$full_name)
+setdiff(pres_countries$full_name, mapa_pres$region)
 
 mapa_pres <- left_join(mapa_pres, pres_countries, by = c("region" = "full_name"))
 
@@ -849,6 +873,7 @@ mapa_mre <- map_data(map = "world")
 mapa_mre <- filter(mapa_mre, region  != "Antarctica")
 
 setdiff(mapa_mre$region, mre_countries$full_name)
+setdiff(mre_countries$full_name, mapa_mre$region)
 
 mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "United States", "USA")
 
@@ -865,6 +890,29 @@ mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "A
 mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Bosnia & Herzegovina", "Bosnia and Herzegovina")
 
 mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Myanmar (Burma)", "Myanmar")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "ROM", "Romania")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Czechia", "Czech Republic")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "TMP", "Timor-Leste")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Hong Kong SAR China", "China")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Macao SAR China", "China")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Congo - Brazzaville", "Republic of Congo")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Congo - Kinshasa", "Democratic Republic of the Congo")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Côte d’Ivoire", "Ivory Coast")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Eswatini", "Swaziland")
+
+mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "Réunion", "Reunion")
+
+setdiff(mapa_mre$region, mre_countries$full_name)
+setdiff(mre_countries$full_name, mapa_mre$region)
 
 mapa_mre<- left_join(mapa_mre, mre_countries, by = c("region" = "full_name"))
 
