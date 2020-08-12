@@ -339,10 +339,10 @@ proper_nouns_ngram_plot <- proper_nouns_ngram %>%
 set.seed(202438)
 seta <- grid::arrow(type = "closed", length = unit(.08, "inches"))
 
-ggraph(proper_nouns_ngram_plot, layout = "fr") + geom_edge_link(aes(edge_alpha = count), show.legend = FALSE, arrow = seta, end_cap = circle(.03, "inches")) +
+proper_nouns_plot <- ggraph(proper_nouns_ngram_plot, layout = "fr") + geom_edge_link(aes(edge_alpha = count), show.legend = FALSE, arrow = seta, end_cap = circle(.05, "inches")) +
   geom_node_point(size = 3, colour = "lightblue") + geom_node_text(aes(label = name), vjust = 1, hjust = 1) + theme_void()
 
-# ggsave("collocation_exec_bigrama.png", proper_nouns_plot, height = 10, width = 7, dpi = 600)
+# ggsave("collocation_exec.png", proper_nouns_plot, height = 11, width = 16, dpi = 800)
 
 ```
 
@@ -472,7 +472,8 @@ ggplot(feat_position, aes(x = PRES, y = MRE)) +
   geom_text(aes(label = term), check_overlap = TRUE, vjust = 1.5) +
 scale_x_log10(labels = percent_format(accuracy = 0.0001)) +
   scale_y_log10(labels = percent_format(accuracy = 0.0001)) +
-  geom_abline(color = "red")
+  geom_abline(color = "red") + thesis_theme() + 
+  theme(panel.background = element_rect(fill = "NA", colour = "black"))
 
 ```
 
@@ -857,13 +858,14 @@ hist(mapa_pres$value)
 quantile(mapa_pres$value)
 summary(mapa_pres$value)
 
-mapa_pres$valor_cat <- cut(mapa_pres$value, breaks = c(0, 1, 50, 250, 500, 10614), labels = c("0", "1-50", "50-250", "250-500", "1000 ou mais"), include.lowest = TRUE)
+mapa_pres$valor_cat <- cut(mapa_pres$value, breaks = c(0, 1, 50, 250, 500, 10653), labels = c("0", "1-50", "50-250", "250-500", "Mais de 500"), include.lowest = TRUE)
 
 ggplot(data = mapa_pres, aes(x = long, y = lat, group = group, fill = valor_cat)) +
   geom_polygon(colour = "black") + 
   coord_cartesian() + theme_void() +
-  labs(fill = "Número de Citações") + 
-  scale_fill_viridis_d(option = "D", direction = 1, alpha = .8)
+  labs(fill = "Menções:") + 
+  theme_map(base_size = 12) +
+  scale_fill_manual(values = brewer.pal(5, "Reds")) ## decidir cores! 
 
 ## MRE
 
@@ -928,7 +930,8 @@ hist(mapa_mre$value)
 quantile(mapa_mre$value)
 summary(mapa_mre$value)
 
-mapa_mre$valor_cat <- cut(mapa_mre$value, breaks = c(0, 1, 50, 250, 500, 8946), labels = c("0", "1-50", "50-250", "250-500", "1000 ou mais"), include.lowest = TRUE)
+mapa_mre$valor_cat <- cut(mapa_mre$value, breaks = c(0, 1, 50, 250, 500, 9046
+), labels = c("0", "1-50", "50-250", "250-500", "Mais de 500"), include.lowest = TRUE)
 
 ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, fill = valor_cat)) +
   geom_polygon(colour = "black") + 
@@ -1003,3 +1006,4 @@ plot(agents_similarity_dend, main = "Distância Euclidiana em Documentos Normali
 dotchart(as.list(agents_similarity)$"Lafer", xlab = "Distância Euclidiana", pch = 19)
 
 ```
+
