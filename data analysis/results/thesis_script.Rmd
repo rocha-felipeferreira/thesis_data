@@ -336,16 +336,16 @@ proper_nouns_ngram <- proper_nouns_ngram %>% group_by(collocation) %>%
 proper_nouns_ngram <- separate(data = proper_nouns_ngram, col = collocation, into = c("p1", "p2"), sep = " ")
 
 proper_nouns_ngram_plot <- proper_nouns_ngram %>%
-  filter(count > 40) %>% 
+  filter(count > 50) %>% 
   graph_from_data_frame()
 
-set.seed(202438)
 seta <- grid::arrow(type = "closed", length = unit(.08, "inches"))
 
+set.seed(202438)
 proper_nouns_plot <- ggraph(proper_nouns_ngram_plot, layout = "fr") + geom_edge_link(aes(edge_alpha = count), show.legend = FALSE, arrow = seta, end_cap = circle(.05, "inches")) +
-  geom_node_point(size = 3, colour = "lightblue") + geom_node_text(aes(label = name), vjust = 1, hjust = 1) + theme_void()
+  geom_node_point(size = 3, colour = "lightblue") + geom_node_text(aes(label = name), vjust = 1, hjust = 1, size = 3.5, nudge_x = .2, nudge_y = -.2) + theme_void()
 
-# ggsave("collocation_exec.png", proper_nouns_plot, height = 11, width = 16, dpi = 800)
+# ggsave("collocation_exec.png", proper_nouns_plot, height = 6.2, width = 10.2, dpi = 600)
 
 ```
 
