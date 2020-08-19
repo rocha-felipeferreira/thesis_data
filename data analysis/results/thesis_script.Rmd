@@ -440,7 +440,9 @@ feat_cor <- names(topfeatures(main_feat_cor, 100))
 main_feat_cor <- fcm_select(main_feat_cor, pattern = feat_cor, case_insensitive = TRUE)
 
 set.seed(123456)
-textplot_network(main_feat_cor, omit_isolated = FALSE, edge_alpha = .3, edge_color = "lightblue", vertex_labelsize = 5.6)
+network_main_feat_plot <- textplot_network(main_feat_cor, omit_isolated = FALSE, edge_alpha = .3, edge_color = "lightblue", vertex_labelsize = 5.6)
+
+# ggsave("G4_network_exec.png", network_main_feat_plot, height = 7.5, width = 11, dpi = 600)
 
 ```
 
@@ -470,13 +472,15 @@ feat_position <- mutate(feat_position, count = count/sum(count))
 
 feat_position <- pivot_wider(feat_position, names_from = document, values_from = count)
 
-ggplot(feat_position, aes(x = PRES, y = MRE)) + 
+feat_position_comparison <- ggplot(feat_position, aes(x = PRES, y = MRE)) + 
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
   geom_text(aes(label = term), check_overlap = TRUE, vjust = 1.5) +
 scale_x_log10(labels = percent_format(accuracy = 0.0001)) +
   scale_y_log10(labels = percent_format(accuracy = 0.0001)) +
   geom_abline(color = "red") + thesis_theme() + 
   theme(panel.background = element_rect(fill = "NA", colour = "black"))
+
+# ggsave("G1_feat_comparison_position.png", feat_position_comparison, height = 7.5, width = 11, dpi = 600)
 
 ```
 
