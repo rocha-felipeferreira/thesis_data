@@ -513,9 +513,9 @@ speakers_keyness_plot <- textplot_keyness(position_keyness, 30)
 
 speakers_keyness_plot <- speakers_keyness_plot + thesis_theme() + 
   scale_x_continuous(expand = c(0,0), limits = c(-200, 300)) +
-  scale_color_manual(labels = c("PRES", "MRE"), values = c("#3e424a", "gray"))
+  scale_color_manual(labels = c("PRES", "MRE"), values = c("darkblue", "gray"))
 
-# ggsave("cargo_keyness_plot.png", speakers_keyness_plot, height = 6, width = 9.7, dpi = 600)
+# ggsave("G2_cargo_keyness_plot.png", speakers_keyness_plot, height = 6, width = 11, dpi = 600)
 
 ```
 
@@ -601,7 +601,7 @@ proper_nouns_cargo_plot <- ggplot(proper_nouns_tri_mre_pres_joint, aes(x = reord
   thesis_theme() + 
   xlab("Expressões (Trigrama)") + ylab("Frequência")
 
-# ggsave("cargo_ProperNouns_plot.png", proper_nouns_cargo_plot, height = 10, width = 10, dpi = 600)
+# ggsave("G3_cargo_ProperNouns_plot.png", proper_nouns_cargo_plot, height = 10, width = 10, dpi = 600)
 
 ```
 
