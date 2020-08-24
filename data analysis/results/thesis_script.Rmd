@@ -670,7 +670,7 @@ set.seed(123456)
 joined_network <- pres_network + mre_network + plot_layout(nrow = 2)
 joined_network
 
-# ggsave("cargo_network_plot.png", joined_network, height = 17, width = 11, dpi = 600)
+# ggsave("G4_cargo_network_plot.png", joined_network, height = 17, width = 11, dpi = 600)
 
 ```
 
