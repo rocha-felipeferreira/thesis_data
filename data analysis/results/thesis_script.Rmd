@@ -38,6 +38,7 @@ library(igraph)
 library(ggraph)
 library(scales)
 library(cartography)
+library(gwordtree)
 
 ```
 
@@ -681,24 +682,29 @@ joined_network
 #MRE
 brazil_defends_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_reshape(to = "sentences") 
 
-brazil_defends_mre_kwic <- kwic(brazil_defends_mre, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+brazil_defends_mre_kwic <- kwic(brazil_defends_mre, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 20) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_defends_mre_kwic$id <- "MRE"
+brazil_defends_mre_kwic$merged <- paste(brazil_defends_mre_kwic$pre, brazil_defends_mre_kwic$keyword, brazil_defends_mre_kwic$post)
+
+brazil_defends_mre_kwic$merged <- str_trim(brazil_defends_mre_kwic$merged)
+
+gwordtree(word = brazil_defends_mre_kwic$merged, firstword = "brasil", width = 1200)
 
 #Presidentes
 
 brazil_defends_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
 
-brazil_defends_pres_kwic <- kwic(brazil_defends_pres, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
+brazil_defends_pres_kwic <- kwic(brazil_defends_pres, phrase("o brasil defende"), case_insensitive = TRUE, valuetype = "fixed", window = 20) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_defends_pres_kwic$id <- "PRES"
+brazil_defends_pres_kwic$merged <- paste(brazil_defends_pres_kwic$pre, brazil_defends_pres_kwic$keyword, brazil_defends_pres_kwic$post)
 
-# Merged
+brazil_defends_pres_kwic$merged <- str_trim(brazil_defends_pres_kwic$merged)
 
-brazil_defends_kwic <- rbind(brazil_defends_mre_kwic, brazil_defends_pres_kwic)
+gwordtree(word = brazil_defends_pres_kwic$merged, firstword = "brasil", width = 1200)
 
 ```
 
+## CONTINUDAR DAQUI
 
 ```{r brazil_must/should}
 
