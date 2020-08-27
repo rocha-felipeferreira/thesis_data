@@ -704,7 +704,6 @@ gwordtree(word = brazil_defends_pres_kwic$merged, firstword = "brasil", width = 
 
 ```
 
-## CONTINUDAR DAQUI
 
 ```{r brazil_must/should}
 
@@ -714,7 +713,11 @@ brazil_mustshould_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpu
 
 brazil_mustshould_mre_kwic <- kwic(brazil_mustshould_mre, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_mustshould_mre_kwic$id <- "MRE"
+brazil_mustshould_mre_kwic$merged <- paste(brazil_mustshould_mre_kwic$pre, brazil_mustshould_mre_kwic$keyword, brazil_mustshould_mre_kwic$post)
+
+brazil_mustshould_mre_kwic$merged <- str_trim(brazil_mustshould_mre_kwic$merged)
+
+gwordtree(word = brazil_mustshould_mre_kwic$merged, firstword = "brasil", width = 1200)
 
 #Presidentes
 
@@ -722,12 +725,11 @@ brazil_mustshould_pres <- corpus_subset(main_corpus, position == "PRES") %>% cor
 
 brazil_mustshould_pres_kwic <- kwic(brazil_mustshould_pres, phrase("o brasil deve"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_mustshould_pres_kwic$id <- "PRES"
+brazil_mustshould_pres_kwic$merged <- paste(brazil_mustshould_pres_kwic$pre, brazil_mustshould_pres_kwic$keyword, brazil_mustshould_pres_kwic$post)
 
-# Merged
+brazil_mustshould_pres_kwic$merged <- str_trim(brazil_mustshould_pres_kwic$merged)
 
-brazil_mustshould_kwic <- rbind(brazil_mustshould_mre_kwic, brazil_mustshould_pres_kwic)
-
+gwordtree(word = brazil_mustshould_pres_kwic$merged, firstword = "brasil", width = 1200)
 
 ```
 
@@ -739,7 +741,11 @@ brazil_needs_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_res
 
 brazil_needs_mre_kwic <- kwic(brazil_needs_mre, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_needs_mre_kwic$id <- "MRE"
+brazil_needs_mre_kwic$merged <- paste(brazil_needs_mre_kwic$pre, brazil_needs_mre_kwic$keyword, brazil_needs_mre_kwic$post)
+
+brazil_needs_mre_kwic$merged <- str_trim(brazil_needs_mre_kwic$merged)
+
+gwordtree(word = brazil_needs_mre_kwic$merged, firstword = "brasil", width = 1200)
 
 #Presidentes
 
@@ -747,11 +753,11 @@ brazil_needs_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_r
 
 brazil_needs_pres_kwic <- kwic(brazil_needs_pres, phrase("o brasil precisa"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_needs_pres_kwic$id <- "PRES"
+brazil_needs_pres_kwic$merged <- paste(brazil_needs_pres_kwic$pre, brazil_needs_pres_kwic$keyword, brazil_needs_pres_kwic$post)
 
-# Merged
+brazil_needs_pres_kwic$merged <- str_trim(brazil_needs_pres_kwic$merged)
 
-brazil_needs_kwic <- rbind(brazil_needs_mre_kwic, brazil_needs_pres_kwic)
+gwordtree(word = brazil_needs_pres_kwic$merged, firstword = "brasil", width = 1200)
 
 ```
 
@@ -763,18 +769,10 @@ brazil_can_mre <- corpus_subset(main_corpus, position == "MRE") %>% corpus_resha
 
 brazil_can_mre_kwic <- kwic(brazil_can_mre, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
 
-brazil_can_mre_kwic$id <- "MRE"
-
 #Presidentes
 brazil_can_pres <- corpus_subset(main_corpus, position == "PRES") %>% corpus_reshape(to = "sentences") 
 
 brazil_can_pres_kwic <- kwic(brazil_can_pres, phrase("o brasil pode"), case_insensitive = TRUE, valuetype = "fixed", window = 100000) %>% as.data.frame() %>% select(pre, keyword, post)
-
-brazil_can_pres_kwic$id <- "PRES"
-
-# Merged
-
-brazil_can_kwic <- rbind(brazil_can_mre_kwic, brazil_can_pres_kwic)
 
 ```
 
@@ -788,7 +786,7 @@ kwic_graph_df <- gather(kwic_graph_df, key = "Agentes", value = "valores", -sent
 
 kwic_graph_df$sentence <- str_to_upper(kwic_graph_df$sentence)
 
-kwic_plot <- ggplot(kwic_graph_df, aes(x = sentence, y = valores)) +
+wordtree_plot <- ggplot(kwic_graph_df, aes(x = sentence, y = valores)) +
   geom_line(aes(group = sentence)) +
   geom_label(aes(label = valores, fill = Agentes), size = 6) + 
   coord_flip() +
