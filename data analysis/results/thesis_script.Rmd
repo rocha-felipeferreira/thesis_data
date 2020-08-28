@@ -861,22 +861,24 @@ pres_countries$full_name <- str_replace_all(pres_countries$full_name, pattern = 
 setdiff(mapa_pres$region, pres_countries$full_name)
 setdiff(pres_countries$full_name, mapa_pres$region)
 
+pres_countries$perc <- pres_countries$value/sum(pres_countries$value)*100
+
 mapa_pres <- left_join(mapa_pres, pres_countries, by = c("region" = "full_name"))
 
 mapa_pres[is.na.data.frame(mapa_pres)] <- 0
 
-hist(mapa_pres$value)
-quantile(mapa_pres$value)
-summary(mapa_pres$value)
+hist(mapa_pres$perc)
+quantile(mapa_pres$perc)
+summary(mapa_pres$perc)
 
-mapa_pres$valor_cat <- cut(mapa_pres$value, breaks = c(0, 1, 50, 250, 500, 10653), labels = c("0", "1-50", "50-250", "250-500", "Mais de 500"), include.lowest = TRUE)
+mapa_pres$valor_cat <- cut(mapa_pres$perc, breaks = c(0, 0.5, 1.5, 2.5, 5.5, 48.99), labels = c("0-0.5%", "0.5-1.5%", "1.5-2.5%", "2.5-5.5%", "> 5.5%") ,include.lowest = TRUE)
 
-ggplot(data = mapa_pres, aes(x = long, y = lat, group = group, fill = valor_cat)) +
+mapa_pres_plot <- ggplot(data = mapa_pres, aes(x = long, y = lat, group = group, fill = valor_cat)) +
   geom_polygon(colour = "black") + 
   coord_cartesian() + theme_void() +
   labs(fill = "Menções:") + 
   theme_map(base_size = 12) +
-  scale_fill_manual(values = carto.pal(pal1 = "sand.pal", n1 = 5, middle = TRUE, transparency = TRUE))
+  scale_fill_manual(values = carto.pal(pal1 = "purple.pal", n1 = 5, middle = FALSE, transparency = TRUE))
 
 ## MRE
 
@@ -933,23 +935,30 @@ mre_countries$full_name <- str_replace_all(mre_countries$full_name, pattern = "R
 setdiff(mapa_mre$region, mre_countries$full_name)
 setdiff(mre_countries$full_name, mapa_mre$region)
 
+mre_countries$perc <- mre_countries$value/sum(mre_countries$value)*100
+
 mapa_mre<- left_join(mapa_mre, mre_countries, by = c("region" = "full_name"))
 
 mapa_mre[is.na.data.frame(mapa_mre)] <- 0
 
-hist(mapa_mre$value)
-quantile(mapa_mre$value)
-summary(mapa_mre$value)
+hist(mapa_mre$perc)
+quantile(mapa_mre$perc)
+summary(mapa_mre$perc)
 
-mapa_mre$valor_cat <- cut(mapa_mre$value, breaks = c(0, 1, 50, 250, 500, 9046
-), labels = c("0", "1-50", "50-250", "250-500", "Mais de 500"), include.lowest = TRUE)
+mapa_mre$valor_cat <- cut(mapa_mre$perc, breaks = c(0, 0.5, 1.5, 2.5, 5.5, 42.99), labels = c("0-0.5%", "0.5-1.5%", "1.5-2.5%", "2.5-5.5%", "> 5.5%") ,include.lowest = TRUE)
 
-ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, fill = valor_cat)) +
+mapa_mre_plot <- ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, fill = valor_cat)) +
   geom_polygon(colour = "black") + 
   coord_cartesian() + theme_void() +
   labs(fill = "Menções:") + 
   theme_map(base_size = 12) +
-  scale_fill_manual(values = carto.pal(pal1 = "sand.pal", n1 = 5, middle = TRUE, transparency = TRUE))
+  scale_fill_manual(values = carto.pal(pal1 = "purple.pal", n1 = 5, middle = FALSE, transparency = TRUE))
+
+# Saving
+
+# ggsave(filename = "G12_mre_map.png", plot = mapa_mre_plot, height = 4.5, width = 9, dpi = 600)
+
+# ggsave(filename = "G13_pres_map.png", plot = mapa_pres_plot, height = 4.5, width = 9, dpi = 600)
 
 ```
 
