@@ -162,7 +162,7 @@ corpus_data_source$speaker_reshaped[corpus_data_source$doc_id == "MRE_C.Amorim_0
 
 ```{r stopwords}
 
-custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos","deste", "destes", "desta", "destas", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há", "haver", "havia", "aconteçam", "pacífca", "lembrar-se", "senhor", "senhora", "senhores", "senhoras", "excelente", "excelentíssimo", "excelentíssima", "excelentíssimos", "excelentíssimas", "yes", "no", "ss", "porém", "fiz", "vir", "vinte", "ter", "ir")
+custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos","deste", "destes", "desta", "destas", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há", "haver", "havia", "aconteçam", "pacífca", "lembrar-se", "senhor", "senhora", "senhores", "senhoras", "excelente", "excelentíssimo", "excelentíssima", "excelentíssimos", "excelentíssimas", "yes", "no", "ss", "porém", "fiz", "vir", "vinte", "ter", "ir", "frmemente")
 
 ```
 
@@ -969,25 +969,27 @@ mapa_mre_plot <- ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, f
 
 ```{r tfidf_agents}
 
-dfm_specific_terms <- tokens_subset(main_tokens, language == "pt")
-
-dfm_specific_terms <- dfm(dfm_specific_terms, tolower = TRUE, 
-                          remove_punct = TRUE, remove_numbers = TRUE, 
-                          remove_symbols = TRUE, remove_separators = TRUE,
-                          remove = c(stopwords(language = "portuguese"), 
-                                     custom_stopwords, 
-                                     stopwords(language = "english"), 
-                                     stopwords(language = "spanish"),
-                                     stopwords(language = "french"),
-                                     stopwords(language = "italian")))
-
-dfm_specific_terms <- dfm_group(dfm_specific_terms, groups = "speaker_reshaped") %>% dfm_tfidf()
+dfm_specific_terms <- main_corpus %>% tokens() %>% 
+  tokens_subset(language == "pt") %>% 
+  tokens_tolower() %>% 
+  tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>%
+  tokens_remove("[0-9]+", valuetype = "regex", padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "portuguese"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "english"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
+  tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
+  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_compound(pattern = phrase(nomes_compostos_keyness_realm), case_insensitive = TRUE) %>% 
+  tokens_ngrams(n = 2, concatenator = " ")
+  
+dfm_specific_terms <- dfm_specific_terms %>% dfm() %>% dfm_group(groups = "speaker_reshaped") %>% dfm_tfidf()
 
 specific_terms <- tidy(dfm_specific_terms)
 specific_terms$document <- str_to_upper(specific_terms$document)
-specific_terms$term <- str_to_upper(specific_terms$term)
+specific_terms$term <- str_to_lower(specific_terms$term)
 
-specific_terms <- specific_terms %>% group_by(document) %>% top_n(15) %>% ungroup() 
+specific_terms <- specific_terms %>% group_by(document) %>% slice_max(n = 15, with_ties = FALSE, order_by = count) %>% ungroup() 
 
 specific_terms$document <- factor(specific_terms$document, ordered = TRUE, levels = c("FHC I", "FHC II", "LAMPREIA", "LAFER", "LULA I", "AMORIM I", "LULA II", "AMORIM II", "DILMA", "PATRIOTA", "FIGUEIREDO", "VIEIRA", "SERRA", "NUNES", "ARAÚJO"))
 
@@ -997,7 +999,7 @@ specific_terms_plot <- ggplot(specific_terms, aes(x=reorder_within(term, count, 
         panel.grid.major.x = element_blank(),
         strip.text = element_text(size = rel(1.3)))
 
-# ggsave("speakers_tfidf.png", specific_terms_plot, dpi = 900, width = 10, height = 15.5)
+# ggsave("speakers_tfidf.png", specific_terms_plot, dpi = 900, width = 13, height = 15.5)
 
 ```
 
