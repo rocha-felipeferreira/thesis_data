@@ -162,7 +162,10 @@ corpus_data_source$speaker_reshaped[corpus_data_source$doc_id == "MRE_C.Amorim_0
 
 ```{r stopwords}
 
-custom_stopwords <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos","deste", "destes", "desta", "destas", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há", "haver", "havia", "aconteçam", "pacífca", "lembrar-se", "senhor", "senhora", "senhores", "senhoras", "excelente", "excelentíssimo", "excelentíssima", "excelentíssimos", "excelentíssimas", "yes", "no", "ss", "porém", "fiz", "vir", "vinte", "ter", "ir", "frmemente")
+custom_stopwords_part1 <- c("fernando", "henrique", "cardoso", "luiz", "luíz", "felipe", "lampreia","celso", "lafer", "luiz", "nunes", "amorim", "inácio", "lula", "da", "silva", "dilma", "vana", "rousseff", "michel", "temer", "jair", "messias", "bolsonaro", "antonio", "aguiar", "patriota", "alberto", "figueiredo", "mauro", "vieira","josé", "serra", "aloysio", "nunes", "ferreira", "filho", "ernesto", "araújo", "cc", "v", "srs", "srªs", "ex.ª", "fh", "vossa", "desafo", "desafos", "enfm", "ext", "resenha", "resenhas", "de", "2O", "pol", "profssional", "profssionalismo", "s.paulo", "obrigada", "afrmação", "signifca", "cinegrafstas", "7º", "presidente", "presidenta", "reafrmamos", "swissinfo.ch", "conseqüências", "econômicocomercial", "específcas", "difculdades", "nw", "df", "also", "é", "brasil", "brazil",  "one", "well", "política", "externa", "brasileiro", "brasileira", "4.0", "2017-2018", "brasil-índia", "c.a", "cartacapital", "bomtempo", "nº", "fm", "sc", "mv", "trem", "ate", "ô", "pois", "algum", "coisa", "alguma", "algumas", "nenhum", "nenhuma", "sr", "brasil-união", "taças", "ai", "aí", "três", "vão", "vai", "dr", "n", "`	", "`", "ser", "estar", "é", "ora", "logo", "algum", "alguns", "alguma", "algumas", "apenas", "cada", "diante de", "apesar", "sendo", "quase", "aqui", "daqui", "demais", "embora", "aliás", "inclusive", "talvez", "embora", "tal", "tais", "muitas", "muita", "muitos", "muito", "assim", "sobretudo", "talvez", "primeiro", "segundo", "terceiro", "quarto", "quinto", "primeira", "segunda", "terceira", "quarta", "quinta", "então", "dessa", "dessas", "desse", "desses", "esse", "esses", "essa", "essas", "aquele", "aqueles", "aquela", "auqelas", "aquilo", "aquilos","deste", "destes", "desta", "destas", "certamente", "algum", "alguns", "pouco", "pouca", "poucos", "poucas", "ponto", "vamos", "vezes", "vez", "outro", "outros", "outra", "outras", "assim", "vou", "novo", "novos", "nova", "novas", "ano", "anos", "coisa", "coisas", "querer", "quero", "dentro", "próprio", "próprios", "própria", "próprias", "barato", "barata", "baratos", "baratas", "acho", "ver", "faz", "parte", "disse", "tudo", "ainda", "dizer", "agora", "adversamente", "descobrir", "descobriu", "ganhei", "lembrar", "importante", "gente", "possa", "ver", "partes", "dar", "queremos", "fazendo", "sempre", "nunca", "nessa", "nessas", "nesse", "nesses", "nisso", "ver", "todo", "todos", "tudo", "partir", "hoje", "grande", "dois", "agora", "sempre", "bem", "acho", "dar", "dia", "grandes", "além", "possível", "maneira", "todas", "toda", "onde", "portanto", "caso", "única", "únicas", "único", "únicos", "fato", "fatos", "tão", "duas", "neste", "nestes", "nestas", "nesta", "us", "lado", "toda", "qualquer", "quaisquer", "qual", "quais", "quando", "último", "últimos", "última", "últimas", "last", "year", "years", "find", "sabe", "claro", "quatro", "sim", "não", "bom", "maior", "maiores", "tempo", "disso", "daquela", "daquelas", "daquele", "daqueles", "dessa", "dessas", "desse", "desses", "modo", "maneira", "forma", "acreditar", "frequente", "frequentemente", "entendemos", "naturalmente", "precisamos", "longo", "fundamental", "comum", "especial", "importante", "obrigado", "obrigada", "muito", "muitos", "pouco", "poucos", "pouca", "poucas", "importância", "preciso", "menor", "menos", "exemplo", "exemplos", "por", "para", "pelo", "pela", "fim", "final", "finais", "época", "vista", "vistas", "momento", "melhor", "now", "caro", "caros", "significa", "formas", "nível", "verdade", "mil", "millones", "semi-acabado", "semi-acabados", "fzemos", "fscal", "primeiroministro", "fnanciamento", "fnanceira", "unica", "unicas", "unico", "unicos", "única", "únicas", "único", "únicos", "posso", "pays", "digamos", "ergo", "digo", "têm", "fzeram", "exemplificativa", "conseguinte", "há")
+                       
+
+custom_stopwords_part2 <- c("haver", "havia", "aconteçam", "pacífca", "lembrar-se", "senhor", "senhora", "senhores", "senhoras", "excelente", "excelentíssimo", "excelentíssima", "excelentíssimos", "excelentíssimas", "yes", "no", "ss", "porém", "fiz", "vir", "vinte", "ter", "ir", "frmemente", "embaixador", "embaixadores", "embaixadora", "embaixadoras", "compromitido", "querido", "queridos", "querida", "queridas", "companheiro", "companheira", "companheiros", "companheiras")
 
 ```
 
@@ -186,8 +189,6 @@ nomes_compostos <- c("instituto rio branco", "hugo chávez", "evo morales", "fol
 main_tokens <- tokens(main_corpus)
 
 main_tokens <- tokens_compound(main_tokens, pattern = phrase(nomes_compostos), case_insensitive = TRUE)
-
-main_tokens <- tokens_replace(x = main_tokens, pattern = "companheir*", replacement = "companheir@", valuetype = "glob", case_insensitive = TRUE)
 
 main_tokens <- tokens_replace(main_tokens, pattern = "assembl*ia", replacement = "assembleia", valuetype = "glob", case_insensitive = TRUE)
 
@@ -319,7 +320,8 @@ proper_nouns <- main_corpus %>% tokens() %>%
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE)
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part2, padding = TRUE)
 
 proper_nouns <- tokens_select(proper_nouns,
                               pattern =  '^[A-Z]',
@@ -365,7 +367,8 @@ realm_keyness <- main_corpus %>% tokens() %>%
   tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part2, padding = TRUE) %>% 
   tokens_compound(pattern = phrase(nomes_compostos_keyness_realm), case_insensitive = TRUE) %>% 
   tokens_ngrams(n = 2, concatenator = " ")  
 
@@ -398,7 +401,7 @@ feat_continent <- dfm(main_tokens, tolower = TRUE,
                                  stopwords(language = "french"),
                                  stopwords(language = "spanish"), 
                                  stopwords(language = "italian"), 
-                                 custom_stopwords))
+                                 custom_stopwords_part1, custom_stopwords_part2))
 
 feat_continent <- dfm_group(feat_continent, groups = "continent") %>% 
   dfm_tfidf()
@@ -433,7 +436,7 @@ main_feat_cor <- dfm(main_tokens, tolower = TRUE, remove_punct = TRUE,
                                     stopwords(language = "french"),
                                     stopwords(language = "italian"),
                                     stopwords(language = "spanish"),
-                                    custom_stopwords))
+                                    custom_stopwords_part1, custom_stopwords_part2))
 
 main_feat_cor <- dfm_trim(main_feat_cor, min_termfreq = 100) 
 main_feat_cor <- fcm(main_feat_cor)
@@ -463,7 +466,7 @@ feat_position <- dfm(feat_position, tolower = TRUE,
                                  stopwords(language = "french"),
                                  stopwords(language = "spanish"), 
                                  stopwords(language = "italian"), 
-                                 custom_stopwords))
+                                 custom_stopwords_part1, custom_stopwords_part2))
 
 feat_position <- dfm_group(feat_position, groups = "position")
 
@@ -500,7 +503,8 @@ position_keyness <- main_corpus %>% tokens() %>%
   tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>%
+  tokens_remove(custom_stopwords_part2, padding = TRUE) %>% 
   tokens_compound(pattern = phrase(nomes_compostos_keyness_position), case_insensitive = TRUE) %>% 
   tokens_ngrams(n = 2, concatenator = " ")  
 
@@ -537,7 +541,9 @@ proper_nouns_presid <- proper_nouns_presid %>%
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE)
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part2, padding = TRUE) 
+
 
 proper_nouns_presid <- tokens_select(proper_nouns_presid,
                               pattern =  '^[A-Z]',
@@ -566,7 +572,8 @@ proper_nouns_mre <- proper_nouns_mre %>%
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove('[\\p{P}\\p{S}]', valuetype = 'regex', padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE)
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part2, padding = TRUE)
 
 proper_nouns_mre <- tokens_select(proper_nouns_mre,
                                      pattern =  '^[A-Z]',
@@ -623,7 +630,7 @@ main_feat_mre_cor <- dfm(main_feat_mre_cor, tolower = TRUE, remove_punct = TRUE,
                                     stopwords(language = "french"),
                                     stopwords(language = "italian"),
                                     stopwords(language = "spanish"),
-                                    custom_stopwords))
+                                    custom_stopwords_part1, custom_stopwords_part2))
 
 main_feat_mre_cor <- dfm_trim(main_feat_mre_cor, min_termfreq = 100) 
 main_feat_mre_cor <- fcm(main_feat_mre_cor)
@@ -650,7 +657,7 @@ main_feat_pres_cor <- dfm(main_feat_pres_cor, tolower = TRUE, remove_punct = TRU
                                     stopwords(language = "french"),
                                     stopwords(language = "italian"),
                                     stopwords(language = "spanish"),
-                                    custom_stopwords))
+                                    custom_stopwords_part1, custom_stopwords_part2))
 
 main_feat_pres_cor <- dfm_trim(main_feat_pres_cor, min_termfreq = 100) 
 main_feat_pres_cor <- fcm(main_feat_pres_cor)
@@ -979,7 +986,8 @@ dfm_specific_terms <- main_corpus %>% tokens() %>%
   tokens_remove(stopwords(language = "spanish"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "french"), padding = TRUE) %>% 
   tokens_remove(stopwords(language = "italian"), padding = TRUE) %>% 
-  tokens_remove(custom_stopwords, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part1, padding = TRUE) %>% 
+  tokens_remove(custom_stopwords_part2, padding = TRUE) %>% 
   tokens_compound(pattern = phrase(nomes_compostos_keyness_realm), case_insensitive = TRUE) %>% 
   tokens_ngrams(n = 2, concatenator = " ")
   
@@ -1013,7 +1021,7 @@ agents_similarity <- dfm(agents_similarity_tokens, tolower = TRUE,
                           remove_punct = TRUE, remove_numbers = TRUE, 
                           remove_symbols = TRUE, remove_separators = TRUE,
                           remove = c(stopwords(language = "portuguese"), 
-                                     custom_stopwords)) %>% dfm_wordstem(language = "portuguese")
+                                     custom_stopwords_part1, custom_stopwords_part2)) %>% dfm_wordstem(language = "portuguese")
 
 agents_similarity <- dfm_trim(agents_similarity, sparsity = .98)
 
