@@ -40,6 +40,7 @@ library(ggraph)
 library(scales)
 library(cartography)
 library(gwordtree)
+library(dendextend)
 
 ```
 
@@ -1030,11 +1031,11 @@ agents_similarity <- dfm_group(agents_similarity, groups = "speaker_reshaped") %
 
 agents_similarity <- textstat_dist(agents_similarity, margin = "documents", method = "euclidean")
 
-agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust(method = "average") 
+agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust(method = "average") %>% as.dendrogram()
 
-plot(agents_similarity_dend, main = "Distância Euclidiana em Documentos Normalizados", ylab = "", xlab = "", axes = FALSE, sub = "")
+agents_similarity_dend_plot <- color_branches(agents_similarity_dend, k = 5) %>% set("branches_lwd", 2.5)
 
-dotchart(as.list(agents_similarity)$"Lafer", xlab = "Distância Euclidiana", pch = 19)
+plot(agents_similarity_dend_plot, main = "Distância Euclidiana em Documentos Normalizados", ylab = "", xlab = "", axes = TRUE, sub = "")
 
 ```
 
@@ -1054,16 +1055,11 @@ agents_ca_dfm <- dfm_group(agents_ca_dfm, groups = "speaker_reshaped") %>% dfm_w
 
 agents_ca_model <- textmodel_ca(agents_ca_dfm)
 
-textplot_scale1d(agents_ca_model)
+textplot_scale1d(agents_ca_model) + theme(axis.text = element_text(colour = "black", size = rel(1.2)), panel.grid.major = element_line(colour = "gray50")) + geom_point(size = 2)
 
 agents_ca_model_coefficients <- data.frame(dim1 = coef(agents_ca_model, doc_dim = 1)$coef_document, dim2 = coef(agents_ca_model, doc_dim = 2)$coef_document)
 
-plot(1, xlim = c(-4, 4), ylim = c(-4, 4), type = 'n', xlab = 'Dimension 1', ylab = 'Dimension 2')
-grid()
-text(agents_ca_model_coefficients$dim1, agents_ca_model_coefficients$dim2, labels = rownames(dat_ca), cex = 0.8, col = rgb(0, 0, 0, 0.7))
-
-ggplot(agents_ca_model_coefficients, aes(x = dim1, y=dim2)) + geom_label(aes(label = rownames(agents_ca_model_coefficients)))
-
+ggplot(agents_ca_model_coefficients, aes(x = dim1, y=dim2)) + geom_label_repel(aes(label = rownames(agents_ca_model_coefficients))) + xlim(c(-2, 4)) + theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_line(colour = "gray92"), axis.text = element_text(size = rel(1.1), colour = "black"))
 
 ```
 
