@@ -41,6 +41,9 @@ library(scales)
 library(cartography)
 library(gwordtree)
 library(dendextend)
+library(ggrepel)
+library(FactoMineR)
+library(factoextra)
 
 ```
 
@@ -1059,7 +1062,11 @@ textplot_scale1d(agents_ca_model) + theme(axis.text = element_text(colour = "bla
 
 agents_ca_model_coefficients <- data.frame(dim1 = coef(agents_ca_model, doc_dim = 1)$coef_document, dim2 = coef(agents_ca_model, doc_dim = 2)$coef_document)
 
-ggplot(agents_ca_model_coefficients, aes(x = dim1, y=dim2)) + geom_label_repel(aes(label = rownames(agents_ca_model_coefficients))) + xlim(c(-2, 4)) + theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_line(colour = "gray92"), axis.text = element_text(size = rel(1.1), colour = "black"))
+agents_ca_plot <- ggplot(agents_ca_model_coefficients, aes(x = dim1, y=dim2)) + geom_label_repel(aes(label = rownames(agents_ca_model_coefficients))) + xlim(c(-2, 4)) + theme(panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_line(colour = "gray92"), axis.text = element_text(size = rel(1.1), colour = "black"))
+
+# ggsave(filename = "agents_correspondence_analysis.png", plot = agents_ca_plot, dpi = 500, width = 8.2, height = 5.6)
+
+fviz_screeplot(agents_ca_model, addlabels = TRUE)
 
 ```
 
