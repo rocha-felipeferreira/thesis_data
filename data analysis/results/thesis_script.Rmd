@@ -386,7 +386,7 @@ realm_keyness <- textstat_keyness(realm_keyness, target = "international")
 realm_keyness_exec <- textplot_keyness(realm_keyness, 25)
 
 realm_keyness_exec_plot <- realm_keyness_exec + thesis_theme() + 
-  scale_x_continuous(expand = c(0,0), limits = c(-200, 250)) +
+  scale_x_continuous(expand = c(0,0), limits = c(-210, 250)) +
   scale_color_manual(labels = c("Internacional", "Doméstico"), values = c("darkblue", "gray")) 
 
 # ggsave("G2_real_exec_keyness.png", realm_keyness_exec_plot, height = 7, width = 10, dpi = 600)
@@ -481,7 +481,9 @@ feat_position <- mutate(feat_position, count = count/sum(count))
 
 feat_position <- pivot_wider(feat_position, names_from = document, values_from = count)
 
-feat_position_comparison <- ggplot(feat_position, aes(x = PRES, y = MRE)) + 
+names(feat_position) <- c("term", "Chanceler", "Presidente")
+
+feat_position_comparison <- ggplot(feat_position, aes(x = Presidente, y = Chanceler)) + 
   geom_jitter(alpha = 0.1, size = 2.5, width = 0.25, height = 0.25) +
   geom_text(aes(label = term), check_overlap = TRUE, vjust = 1.5) +
 scale_x_log10(labels = percent_format(accuracy = 0.0001)) +
@@ -522,10 +524,10 @@ position_keyness <- textstat_keyness(position_keyness, target = "PRES")
 speakers_keyness_plot <- textplot_keyness(position_keyness, 30) 
 
 speakers_keyness_plot <- speakers_keyness_plot + thesis_theme() + 
-  scale_x_continuous(expand = c(0,0), limits = c(-200, 300)) +
-  scale_color_manual(labels = c("PRES", "MRE"), values = c("darkblue", "gray"))
+  scale_x_continuous(expand = c(0,0), limits = c(-210, 300)) +
+  scale_color_manual(labels = c("Presidente", "Chanceler"), values = c("darkblue", "gray"))
 
-# ggsave("G2_cargo_keyness_plot.png", speakers_keyness_plot, height = 6, width = 11, dpi = 600)
+# ggsave("G2_cargo_keyness_plot.png", speakers_keyness_plot, height = 6, width = 11.5, dpi = 600)
 
 ```
 
@@ -606,7 +608,7 @@ proper_nouns_cargo_plot <- ggplot(proper_nouns_tri_mre_pres_joint, aes(x = reord
   geom_line(aes(group = collocation), colour = "black") + 
   geom_point(size = 3, shape = 21) + 
   coord_flip() +
-  scale_fill_manual(values = c("MRE" = "white", "PRES" = "black")) +
+  scale_fill_manual(values = c("MRE" = "white", "PRES" = "black"), labels = c("Chanceler", "Presidente")) +
   theme(panel.grid.major.x = element_blank(), 
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_line(colour = "gray50", linetype = "dotted"), 
@@ -806,7 +808,7 @@ wordtree_plot <- ggplot(kwic_graph_df, aes(x = sentence, y = valores)) +
   theme(axis.text.x = element_blank(), 
         axis.title = element_blank(), 
         panel.background = element_rect(fill = "white", colour = "black")) +
-  scale_fill_manual(values = c("valores_mre" = "gray75", "valores_pres" = "white"), labels = c("valores_mre" = "MRE", "valores_pres" = "PRES")) 
+  scale_fill_manual(values = c("valores_mre" = "gray75", "valores_pres" = "white"), labels = c("valores_mre" = "Chanceler", "valores_pres" = "Presidente")) 
 
 # ggsave("wordtree_plot.png", wordtree_plot, dpi = 500, width = 8.5, height = 4.5)
 
@@ -890,8 +892,8 @@ mapa_pres_plot <- ggplot(data = mapa_pres, aes(x = long, y = lat, group = group,
   coord_cartesian() + theme_void() +
   labs(fill = "Menções:") + 
   theme_map(base_size = 12) +
-  scale_fill_manual(values = carto.pal(pal1 = "purple.pal", n1 = 5, middle = FALSE, transparency = TRUE))
-
+  scale_fill_manual(values = c("white", "gray90", "gray70", "gray30", "black"))
+  
 ## MRE
 
 mre_countries <- main_corpus %>% tokens() %>% tokens_subset(position == "MRE") %>% dfm(tolower = TRUE, dictionary = countries_dict) %>% convert(to = "data.frame")
@@ -964,7 +966,7 @@ mapa_mre_plot <- ggplot(data = mapa_mre, aes(x = long, y = lat, group = group, f
   coord_cartesian() + theme_void() +
   labs(fill = "Menções:") + 
   theme_map(base_size = 12) +
-  scale_fill_manual(values = carto.pal(pal1 = "purple.pal", n1 = 5, middle = FALSE, transparency = TRUE))
+  scale_fill_manual(values = c("white", "gray90", "gray70", "gray30", "black"))
 
 # Saving
 
@@ -1038,7 +1040,7 @@ agents_similarity_dend <- agents_similarity %>% as.dist() %>% hclust(method = "a
 
 agents_similarity_dend_plot <- color_branches(agents_similarity_dend, k = 5) %>% set("branches_lwd", 2.5)
 
-plot(agents_similarity_dend_plot, main = "Distância Euclidiana em Documentos Normalizados", ylab = "", xlab = "", axes = TRUE, sub = "")
+plot(agents_similarity_dend_plot, main = "", ylab = "", xlab = "", axes = TRUE, sub = "")
 
 ```
 
