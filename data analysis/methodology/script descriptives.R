@@ -124,7 +124,7 @@ speech_year <- speech_year %>%
 
 speech_year <- ggplot(speech_year, aes(x = year, y = n, fill = position)) + 
   geom_line() + geom_point(shape = 21, size = 3) +
-  scale_fill_manual(values = c("MRE" = "black", "PRES" = "white")) +
+  scale_fill_manual(values = c("MRE" = "black", "PRES" = "white"), labels = c("Chanceler", "Presidente")) +
   thesis_theme() +
   xlab("Ano") + ylab("Nº de Discursos") +
   scale_x_continuous(breaks = seq(1995, 2019, 3))
@@ -160,7 +160,7 @@ disc_length <- ggplot(average_discourse_length, aes(x = Types, fill = position))
   geom_histogram(colour = "black", alpha = .4, size = .6) + theme_minimal() +
   thesis_theme() + ylab("Contagem") + xlab("Nº de Types") +
   theme(panel.grid.minor = element_blank()) + 
-  scale_fill_manual(values = c("MRE" = "black", "PRES" = "white"))
+  scale_fill_manual(values = c("MRE" = "black", "PRES" = "white"), labels = c("Chanceler", "Presidente"))
 
 # ggsave(filename = "freq_disc_length.png", plot = disc_length, dpi = 500, width = 5.7, height = 2.8) 
 
@@ -174,17 +174,20 @@ continent_year$continent <- str_to_upper(continent_year$continent)
 
 continent_year$continent <- factor(continent_year$continent, levels = c("AMERICA", "ASIA", "AFRICA", "EUROPA"), labels = c("AMÉRICA", "ÁSIA", "ÁFRICA", "EUROPA"))
 
-continent_plot <- ggplot(continent_year, aes(x = year, y = n, fill = position)) +
-  geom_col(colour = "black") +
-  facet_wrap(~continent) + thesis_theme() +
-  xlab("Ano") + ylab("Nº de Discursos") + 
-  scale_x_continuous(breaks = seq(1995, 2019, 6)) +
-  scale_fill_manual(values = c("MRE" = "gray56", "PRES" = "white")) +
+continent_plot <- ggplot(continent_year, aes(x = position, y = n)) +
+  geom_violin(fill='#A4A4A4', color="black") + 
+  geom_boxplot(width = .15) + 
+  geom_point(colour = "black", fill = "white", shape = 23) +
+  facet_wrap(~continent, scales = "free_y") + 
+  thesis_theme() +
+  xlab("Emissor") + 
+  ylab("Discursos por Ano") +
+  scale_x_discrete(labels = c("Chanceler", "Presidente")) +
   theme(strip.text = element_text(size = rel(1.2)), 
         panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_line(colour = "gray80"), 
         strip.background = element_rect(colour = "black")) 
 
-#ggsave(filename = "freq_disc_continent.png", plot = continent_plot, dpi = 500, width = 8, height = 3.6) 
+#ggsave(filename = "freq_disc_continent.png", plot = continent_plot, dpi = 500, width = 9, height = 6) 
 
 
 # Realm and Languague-------------------------------------------------------------------
@@ -247,8 +250,7 @@ country_speeches_mre_plot <- ggplot(country_speeches_mre_df, aes(x = long, y = l
   theme(legend.text = element_text(size = rel(1)), 
         legend.title = element_blank(), 
         legend.position= c(0.09, 0.15), 
-        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
-  labs(title = "Frequência de Discursos dos Chanceleres por País")
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) 
 
 # ggsave(filename = "map_mre.png", plot = country_speeches_mre_plot, dpi = 500, width = 9.5, height = 5) 
 
@@ -271,8 +273,7 @@ country_speeches_pres_plot <- ggplot(country_speeches_pres_df, aes(x = long, y =
   theme(legend.text = element_text(size = rel(1)), 
         legend.title = element_blank(), 
         legend.position= c(0.09, 0.15), 
-        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) +
-  labs(title = "Frequência de Discursos dos Presidentes por País")
+        plot.title = element_text(hjust = .5, face = "bold", size = rel(1))) 
 
 ## ggsave(filename = "map_pres.png", plot = country_speeches_pres_plot, dpi = 500, width = 9.5, height = 5) 
 
