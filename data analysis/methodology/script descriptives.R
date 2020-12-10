@@ -177,12 +177,14 @@ continent_year$continent <- factor(continent_year$continent, levels = c("AMERICA
 continent_plot <- ggplot(continent_year, aes(x = position, y = n)) +
   geom_violin(fill='#A4A4A4', color="black") + 
   geom_boxplot(width = .15) + 
-  geom_point(colour = "black", fill = "white", shape = 23) +
+  geom_jitter(position = position_jitter(0.11), 
+              fill = "white", shape = 23, colour = "black") +
   facet_wrap(~continent, scales = "free_y") + 
   thesis_theme() +
   xlab("Emissor") + 
   ylab("Discursos por Ano") +
   scale_x_discrete(labels = c("Chanceler", "Presidente")) +
+  scale_y_continuous(breaks = scales::pretty_breaks()) +
   theme(strip.text = element_text(size = rel(1.2)), 
         panel.background = element_rect(fill = "white", colour = "black"), panel.grid.major = element_line(colour = "gray80"), 
         strip.background = element_rect(colour = "black")) 
